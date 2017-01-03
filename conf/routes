@@ -1,0 +1,17 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+
+
+# TodoApri
+GET     /todo                       controllers.TodoContoroller.todos
+POST    /todo/add                   controllers.TodoContoroller.addTodo
+POST    /todo/delete                controllers.TodoContoroller.delTodo
+POST    /todo/move                  controllers.TodoContoroller.moveTodo
+POST    /todo/add_list              controllers.TodoContoroller.addTodoList
+POST    /todo/delete_list           controllers.TodoContoroller.delTodoList
+POST    /todo/move_list             controllers.TodoContoroller.moveTodoList
+

@@ -1,0 +1,7 @@
+ポート指定で起動する
+activator
+run ポート番号
+
+# intelij IDEA
+依存性の解決
+option + Enter
