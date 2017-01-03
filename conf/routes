@@ -15,3 +15,6 @@ POST    /todo/add_list              controllers.TodoContoroller.addTodoList
 POST    /todo/delete_list           controllers.TodoContoroller.delTodoList
 POST    /todo/move_list             controllers.TodoContoroller.moveTodoList
 
+# Websocket
+GET     /chat                       controllers.WebSocketController.chat
+
