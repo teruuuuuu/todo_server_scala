@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 
-const galPng = require('../../../assets/images/gal.png');
-const delPng = require('../../../assets/images/del.png');
+const galPng = require('../../assets/images/gal.png');
+const delPng = require('../../assets/images/del.png');
 
 
 const Card = (props) => {

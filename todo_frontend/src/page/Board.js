@@ -10,9 +10,9 @@ import * as RemoteService from '../remote/remote_todo'
 import * as TestActions from '../actions/test_actions';
 
 
-import CardsComponent from '../component/board/card/CardsComponent';
+import CardsComponent from '../component/card/CardsComponent';
 import CustomDragLayer from '../component/board/CustomDragLayer';
-import TodoListAdd from '../component/board/card/TodoListAdd';
+import TodoListAdd from '../component/card/TodoListAdd';
 
 
 function mapStateToProps(state) {
@@ -28,7 +28,7 @@ function mapDispatchToProps(dispatch) {
 @connect(mapStateToProps, mapDispatchToProps)
 @DragDropContext(HTML5Backend)
 export default class Board extends Component {
-  
+
   static propTypes = {
     getLists: PropTypes.func.isRequired,
     moveCard: PropTypes.func.isRequired,

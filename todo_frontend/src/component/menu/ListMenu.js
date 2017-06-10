@@ -11,7 +11,7 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField'
 
-import TodoInputDialog from './dialog/TodoInputDialog'
+import TodoInputDialog from '../dialog/TodoInputDialog'
 
 
 const menuStyle = {

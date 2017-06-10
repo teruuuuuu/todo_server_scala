@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 //import Card from './card/Card';
-import Card from './card/TodoCard';
+import Card from '../card/TodoCard';
 
 const styles = {
   display: 'inline-block',
