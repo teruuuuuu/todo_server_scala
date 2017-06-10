@@ -1,0 +1,9 @@
+{
+  "TODO_INIT": "http://localhost:9000/todo",
+  "TODO_ADD": "http://localhost:9000/todo/add",
+  "TODO_DELTE": "http://localhost:9000/todo/delete",
+  "TODO_MOVE": "http://localhost:9000/todo/move",
+  "LIST_ADD": "http://localhost:9000/todo/add_list",
+  "LIST_MOVE": "http://localhost:9000/todo/move_list",
+  "LIST_DELETE": "http://localhost:9000/todo/delete_list"
+}

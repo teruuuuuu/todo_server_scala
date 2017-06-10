@@ -1,0 +1,25 @@
+[
+{
+  "id":0,
+  "name": "todo",
+  "cards": [
+    {"id":1, "title": "use kanban", "text": "使ってみる"},
+    {"id":2, "title": "try kanban tool", "text": "試してみる"}
+  ]
+},
+{
+  "id":1,
+  "name": "doing",
+  "cards": [
+    {"id":3, "title": "learn about kanban", "text": "学ぶ"}
+  ]
+},
+{
+  "id":2,
+  "name": "done",
+  "cards": [
+    {"id":4, "title": "get a tool", "text": "手に入れる"}
+  ]
+}
+
+]
