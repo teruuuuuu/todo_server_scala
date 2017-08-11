@@ -17,7 +17,8 @@ import TodoListAdd from './todo-add';
 
 function mapStateToProps(state) {
   return {
-    lists: state.lists.lists
+    lists: state.lists.lists,
+    loginUser: state.loginUser
   };
 }
 
@@ -35,6 +36,7 @@ export default class Board extends Component {
     moveList: PropTypes.func.isRequired,
     callApi: PropTypes.func.isRequired,
     lists: PropTypes.array.isRequired,
+    loginUser: PropTypes.object
   }
 
   constructor(props) {
@@ -51,6 +53,10 @@ export default class Board extends Component {
     this.addTodo = this.addTodo.bind(this);
     this.deleteTodo = this.deleteTodo.bind(this);
     this.state = { isScrolling: false };
+
+    if(!this.props.loginUser.isLogin){
+      // ログインしていない場合はログイン画面へ遷移
+    }
   }
 
   componentWillMount() {
@@ -70,7 +76,6 @@ export default class Board extends Component {
       default:
         break;
     }
-    // }
   }
 
   scrollRight() {

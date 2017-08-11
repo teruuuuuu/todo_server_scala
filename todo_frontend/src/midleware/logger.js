@@ -1,7 +1,7 @@
 // ミドルウェアの宣言
 const logger = function actionDebugMiddleware() {
   return next => action => {
-    console.info(action.type, action);
+    //console.info(action.type, action);
     next(action);
   };
 };
