@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
-import * as ListsActions from '../../actions/lists';
+import * as ListsActions from '../../actions/todo.action';
 import * as RemoteActions from '../../actions/remote';
 import * as RemoteService from '../../remote/remote_todo'
 import * as TestActions from '../../actions/test_actions';
@@ -17,7 +17,7 @@ import TodoListAdd from './todo-add';
 
 function mapStateToProps(state) {
   return {
-    lists: state.lists.lists,
+    lists: state.todoReducer.lists,
     loginUser: state.loginUser
   };
 }
@@ -53,10 +53,6 @@ export default class Board extends Component {
     this.addTodo = this.addTodo.bind(this);
     this.deleteTodo = this.deleteTodo.bind(this);
     this.state = { isScrolling: false };
-
-    if(!this.props.loginUser.isLogin){
-      // ログインしていない場合はログイン画面へ遷移
-    }
   }
 
   componentWillMount() {

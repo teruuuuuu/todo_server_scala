@@ -1,4 +1,4 @@
-import {CALL_API } from '../constants/ActionTypes'
+import {CALL_API } from '../constants/action.define'
 
 
 const initialState = {

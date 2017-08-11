@@ -10,7 +10,7 @@ import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 
-import ListMenu from '../shared/menu/list-menu';
+import ListMenu from './menu/list-menu';
 
 
 const menuStyle = {

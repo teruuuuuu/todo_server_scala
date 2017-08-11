@@ -11,7 +11,6 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 
-import TodoInputDialog from '../dialog/todo-input-dialog';
 
 
 const menuStyle = {
@@ -30,13 +29,9 @@ const buttonStyle = {
 }
 
 
-export default class ListMenu extends Component {
+export default class HeaderMenu extends Component {
   constructor(props, context) {
     super(props, context);
-    this.handleRequestClose = this.handleRequestClose.bind(this);
-    this.clickOk = this.clickOk.bind(this);
-    this.deleteList = this.deleteList.bind(this);
-    this.handleTouchTap = this.handleTouchTap.bind(this);
 
     this.state = {
       open: false
@@ -44,42 +39,13 @@ export default class ListMenu extends Component {
   }
 
   static propTypes = {
-    id: PropTypes.number,
-    addTodo: PropTypes.func.isRequired,
-    deleteList: PropTypes.func.isRequired
-  }
 
-
-  handleRequestClose() {
-    this.setState({
-      open: false,
-    });
-  }
-
-  handleTouchTap() {
-    this.setState({
-      open: true,
-    });
-  }
-
-  clickOk(data) {
-    const { id } = this.props
-    this.props.addTodo(Object.assign({}, data, { componentId: id}));
-
-    this.setState({
-      open: false,
-    });
-  }
-
-  deleteList(){
-    const { id } = this.props
-    this.props.deleteList(id);
   }
 
 
   render() {
-    const { id } = this.props;
-    const { open } = this.state;
+    const {  } = this.props;
+    const {  } = this.state;
 
     const standardActions = (
       <FlatButton
@@ -102,7 +68,6 @@ export default class ListMenu extends Component {
           <MenuItem primaryText="リストを削除" onTouchTap={this.deleteList}/>
         </IconMenu>
 
-        <TodoInputDialog open={open} handleRequestClose={this.handleRequestClose} clickOk={this.clickOk}/>
       </div>
     );
   }

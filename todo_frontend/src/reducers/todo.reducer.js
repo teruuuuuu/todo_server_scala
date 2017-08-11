@@ -8,20 +8,17 @@ import {
   TOGGLE_DRAGGING,
   ADD_TODO,
   DELETE_TODO
-} from '../actions/lists';
-import { INIT_CARD } from '../constants/ToDoResponseTypes'
+} from '../actions/todo.action';
+import { INIT_CARD } from '../constants/response.define'
 
-/* eslint-disable new-cap */
 const InitialState = Record({
   isFetching: false,
   lists: [],
   isDragging: false
 });
-/* eslint-enable new-cap */
 const initialState = new InitialState;
 
-
-export default function lists(state = initialState, action) {
+export default function todoReducer(state = initialState, action) {
   switch (action.type) {
     case GET_LISTS_START:
       return state.set('isFetching', true);

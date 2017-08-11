@@ -1,4 +1,4 @@
-import {CALL_API, END} from '../constants/ActionTypes'
+import {CALL_API, END} from '../constants/action.define'
 import * as RemoteService from '../remote/remote_todo'
 import $      from 'jquery'
 

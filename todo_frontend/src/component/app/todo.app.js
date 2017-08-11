@@ -4,24 +4,29 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import {cyan500} from 'material-ui/styles/colors';
 
+import AppHeader from './header/app.header';
+
+import Todo from '../todo'
 
 const getChildContext = function(){
-  var myTheme = getMuiTheme(lightBaseTheme);
+  var myTheme = getMuiTheme(
+    {appBar: {height: 46}}
+  );
   return myTheme;
 }
 
 const propTypes = {
-  children: PropTypes.element.isRequired
 };
-const LoginTemplate = (props) => (
-  <div>
+const TodoApp = (props) => (
+  <div >
     <MuiThemeProvider muiTheme={getChildContext()}>
       <main>
-      {props.children}
+      <AppHeader />
+      <Todo />
       </main>
     </MuiThemeProvider>
   </div>
 );
 
-LoginTemplate.propTypes = propTypes;
-export default LoginTemplate;
+TodoApp.propTypes = propTypes;
+export default TodoApp;

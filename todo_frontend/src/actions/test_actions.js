@@ -1,4 +1,4 @@
-import * as types from '../constants/ActionTypes'
+import * as types from '../constants/action.define'
 
 //アクションクリエーター
 export function change_text(text) {

@@ -4,26 +4,27 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import {cyan500} from 'material-ui/styles/colors';
 
-import AppHeader from './app.header';
+import Login from '../login';
 
 const getChildContext = function(){
   var myTheme = getMuiTheme(lightBaseTheme);
   return myTheme;
 }
 
+//import { withRouter } from 'react-router-dom'
+// this also works with react-router-native
+
 const propTypes = {
-  children: PropTypes.element.isRequired
 };
-const AppTemplate = (props) => (
-  <div >
+const LoginApp = (props) => (
+  <div>
     <MuiThemeProvider muiTheme={getChildContext()}>
       <main>
-      <AppHeader />
-      {props.children}
+        <Login />
       </main>
     </MuiThemeProvider>
   </div>
 );
 
-AppTemplate.propTypes = propTypes;
-export default AppTemplate;
+LoginApp.propTypes = propTypes;
+export default LoginApp;
