@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { DropTarget } from 'react-dnd';
 import { findDOMNode } from 'react-dom';
 
-import Card from './DraggableCard';
+import Card from './draggable-card';
 
 function getPlaceholderIndex(y, scrollY) {
   let placeholderIndex;
@@ -102,7 +102,7 @@ const specs = {
   canDrop: monitor.canDrop(),
   item: monitor.getItem()
 }))
-export default class Cards extends Component {
+export default class TodoCardList extends Component {
   constructor(props, context) {
     super(props, context);
     this.deleteTodo = this.deleteTodo.bind(this);

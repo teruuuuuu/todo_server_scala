@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { DropTarget, DragSource } from 'react-dnd';
 
-import Cards from './Cards';
+import TodoCardList from './card/todo-card-list';
 
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
@@ -10,7 +10,7 @@ import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 
-import ListMenu from '../menu/ListMenu'
+import ListMenu from '../shared/menu/list-menu';
 
 
 const menuStyle = {
@@ -73,7 +73,7 @@ const listTarget = {
   connectDragSource: connectDragSource.dragSource(),
   isDragging: monitor.isDragging()
 }))
-export default class CardsComponent extends Component {
+export default class TodoBoard extends Component {
 
   constructor(props, context) {
     super(props, context);
@@ -117,7 +117,7 @@ export default class CardsComponent extends Component {
 
           <ListMenu id={id} addTodo={this.addTodo} deleteList={this.props.deleteList}/>
         </div>
-        <Cards
+        <TodoCardList
           moveCard={moveCard}
           x={x}
           cards={item.cards}

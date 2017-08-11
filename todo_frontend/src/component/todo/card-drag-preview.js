@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 //import Card from './card/Card';
-import Card from '../card/TodoCard';
+import TodoCard from './card/todo-card';
 
 const styles = {
   display: 'inline-block',
@@ -18,7 +18,7 @@ const CardDragPreview = (props) => {
 
   return (
     <div style={styles}>
-      <Card item={props.card.item} />
+      <TodoCard item={props.card.item} />
     </div>
   );
 };

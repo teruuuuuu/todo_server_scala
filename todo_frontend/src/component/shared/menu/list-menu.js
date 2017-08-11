@@ -9,9 +9,9 @@ import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import FlatButton from 'material-ui/FlatButton';
-import TextField from 'material-ui/TextField'
+import TextField from 'material-ui/TextField';
 
-import TodoInputDialog from '../dialog/TodoInputDialog'
+import TodoInputDialog from '../dialog/todo-input-dialog';
 
 
 const menuStyle = {

@@ -1,6 +1,8 @@
 logs
 /RUNNING_PID
 
+/typescript_front/
+
 *.class
 *.log
 .ensime

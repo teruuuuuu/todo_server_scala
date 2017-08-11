@@ -4,6 +4,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import {cyan500} from 'material-ui/styles/colors';
 
+import AppHeader from './app.header';
 
 const getChildContext = function(){
   var myTheme = getMuiTheme(lightBaseTheme);
@@ -13,15 +14,16 @@ const getChildContext = function(){
 const propTypes = {
   children: PropTypes.element.isRequired
 };
-const BaseContainer = (props) => (
-  <div style={{ height: '64px' }}>
+const AppTemplate = (props) => (
+  <div >
     <MuiThemeProvider muiTheme={getChildContext()}>
       <main>
+      <AppHeader />
       {props.children}
       </main>
     </MuiThemeProvider>
   </div>
 );
 
-BaseContainer.propTypes = propTypes;
-export default BaseContainer;
+AppTemplate.propTypes = propTypes;
+export default AppTemplate;

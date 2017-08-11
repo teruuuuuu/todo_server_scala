@@ -4,15 +4,15 @@ import { connect } from 'react-redux';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
-import * as ListsActions from '../actions/lists';
-import * as RemoteActions from '../actions/remote';
-import * as RemoteService from '../remote/remote_todo'
-import * as TestActions from '../actions/test_actions';
+import * as ListsActions from '../../actions/lists';
+import * as RemoteActions from '../../actions/remote';
+import * as RemoteService from '../../remote/remote_todo'
+import * as TestActions from '../../actions/test_actions';
 
 
-import CardsComponent from '../component/card/CardsComponent';
-import CustomDragLayer from '../component/board/CustomDragLayer';
-import TodoListAdd from '../component/card/TodoListAdd';
+import TodoBoard from './todo-board';
+import TodoDragLayer from './todo-drag-layer';
+import TodoListAdd from './todo-add';
 
 
 function mapStateToProps(state) {
@@ -136,9 +136,9 @@ export default class Board extends Component {
     return (
       <div className="board-wrapper">
         <div className="board" style={{ height: '100%' }}>
-          <CustomDragLayer snapToGrid={false} />
+          <TodoDragLayer snapToGrid={false} />
           {lists.map((item, i) =>
-            <CardsComponent
+            <TodoBoard
               key={item.id}
               id={item.id}
               item={item}

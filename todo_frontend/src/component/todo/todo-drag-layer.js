@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { DragLayer } from 'react-dnd';
 
-import CardDragPreview from './CardDragPreview';
-import snapToGrid from './snapToGrid';
+import CardDragPreview from './card-drag-preview';
+//import snapToGrid from './snapToGrid';
 
 
 const layerStyles = {
@@ -10,6 +10,14 @@ const layerStyles = {
   pointerEvents: 'none',
   zIndex: 100000
 };
+
+function snapToGrid(x, y) {
+  const snappedX = Math.round(x / 32) * 32;
+  const snappedY = Math.round(y / 32) * 32;
+
+  return [snappedX, snappedY];
+}
+
 
 function getItemStyles(props) {
   const { initialOffset, currentOffset } = props;
@@ -43,8 +51,7 @@ function getItemStyles(props) {
   currentOffset: monitor.getSourceClientOffset(),
   isDragging: monitor.isDragging()
 }))
-
-export default class CustomDragLayer extends Component {
+export default class TodoDragLayer extends Component {
   static propTypes = {
     item: PropTypes.object,
     itemType: PropTypes.string,

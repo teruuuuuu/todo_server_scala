@@ -4,7 +4,7 @@ import { DragSource } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 
 //import Card from './Card';
-import Card from './TodoCard';
+import Card from './todo-card';
 
 
 function getStyles(isDragging) {
@@ -55,6 +55,7 @@ function collectDragSource(connectDragSource, monitor) {
     isDragging: monitor.isDragging()
   };
 }
+
 
 @DragSource('card', cardSource, collectDragSource, OPTIONS)
 export default class CardComponent extends Component {
