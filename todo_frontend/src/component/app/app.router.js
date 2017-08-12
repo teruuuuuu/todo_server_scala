@@ -3,9 +3,23 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
+import {cyan500} from 'material-ui/styles/colors';
 
 import Login from './login.app';
 import TodoApp from './todo.app';
+
+import CommonAlert from '../shared/common-alert';
+
+
+const getChildContext = function(){
+  var myTheme = getMuiTheme(
+    {appBar: {height: 46}}
+  );
+  return myTheme;
+}
 
 function mapStateToProps(state) {
   return {
@@ -27,11 +41,17 @@ export default class AppRouter extends Component {
   pageSwitch(){
     if(!this.props.loginUser.isLogin){
       return (
-        <Login/>
+        <div>
+          <Login/>
+          <CommonAlert />
+        </div>
       );
     }else{
       return (
-        <TodoApp/>
+        <div>
+          <TodoApp/>
+          <CommonAlert />
+        </div>
       );
     }
   }
@@ -40,7 +60,9 @@ export default class AppRouter extends Component {
 
     return(
       <div>
-      { this.pageSwitch() }
+        <MuiThemeProvider muiTheme={getChildContext()}>
+          { this.pageSwitch() }
+        </MuiThemeProvider >
       </div>
     )
   }

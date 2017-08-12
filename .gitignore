@@ -2,6 +2,7 @@ logs
 /RUNNING_PID
 
 /typescript_front/
+/todo_frontend_back/
 
 *.class
 *.log

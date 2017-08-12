@@ -127,7 +127,7 @@ class TodoService @Inject()() {
           insert into todo_category (id, name, index) values
           ( (select nextval('todo_category_id_seq')),
             {name},
-            (select max(index) + 1 from todo_category)
+            (select coalesce(max(index) + 1, 1) from todo_category)
            )
         """
       ).on(

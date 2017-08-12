@@ -5,6 +5,8 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 
 import * as LoginAction from '../../actions/login.action';
+import * as RemoteActions from '../../actions/remote';
+import * as RemoteService from '../../remote/login'
 
 const loginAreaStyle = {
   'background': 'rgb(255, 255, 255)',
@@ -31,13 +33,14 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators( Object.assign({}, LoginAction ), dispatch);
+  return bindActionCreators( Object.assign({}, LoginAction, RemoteActions ), dispatch);
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class LoginComponent extends Component {
 
   static propTypes = {
+    callApi: PropTypes.func.isRequired,
     loginRequest: PropTypes.func.isRequired
   }
 
@@ -47,7 +50,10 @@ export default class LoginComponent extends Component {
   }
 
   loginRequest(){
-    this.props.loginRequest();
+    //this.props.loginRequest();
+    const userId = this.refs.userId.getValue();
+    const password = this.refs.password.getValue();
+    this.props.callApi(RemoteService.login(userId, password));
   }
 
   render() {
@@ -55,8 +61,8 @@ export default class LoginComponent extends Component {
       <div >
         <div style={loginAreaStyle}>
           <div style={titleStyle}>LOGIN</div>
-          <TextField hintText="user name" ref="listText"/><br />
-          <TextField hintText="password" ref="listText"/><br />
+          <TextField hintText="user id" ref="userId"/><br />
+          <TextField hintText="password" ref="password"/><br />
           <RaisedButton label="ログイン" primary={true} style={buttonStyle} onClick={this.loginRequest} />
         </div>
       </div>

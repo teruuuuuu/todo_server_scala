@@ -28,7 +28,7 @@ function mapDispatchToProps(dispatch) {
 
 @connect(mapStateToProps, mapDispatchToProps)
 @DragDropContext(HTML5Backend)
-export default class Board extends Component {
+export default class TodoComponent extends Component {
 
   static propTypes = {
     getLists: PropTypes.func.isRequired,

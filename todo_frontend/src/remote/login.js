@@ -1,9 +1,16 @@
 import createRequestData from './common'
-import * as types from '../constants/loginRequestType'
+import * as types from '../constants/action.define'
+
+import * as CommonAlertAction from '../actions/common-alert.action';
 
 export function  login(userId, password) {
   const response_action = function(data){
-    return {type: types.LOGIN, data: data}
+    if(data.seq_num > 0){
+      return {type: types.LOGIN, data: data}
+    }else{
+      return CommonAlertAction.openCommonAlert('ユーザIDまたはパスワードが間違っています')
+    }
+
   }
 
   const data = {
