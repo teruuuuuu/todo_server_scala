@@ -30,6 +30,7 @@ const api_caller = function actionApiCall() {
         data: remote.data,
         cache: false,
         scriptCharset: 'utf-8',
+        xhrFields: {withCredentials: true},
         //contentType: remote.contentType,
         success: data => {
           if([REQUEST_URL.TODO_ADD, REQUEST_URL.TODO_DELTE, REQUEST_URL.TODO_MOVE,

@@ -36,7 +36,9 @@ class LoginController  @Inject()(val messagesApi: MessagesApi,
               case None =>
                 Ok(Json.toJson(UserMst(-1, "", "", "", "")))
               case Some(x) =>
+                val user_id = validForm.user_id
                 Ok(Json.toJson(user))
+                  .withSession(request.session + "loginUserId" -> user_id)
             }
           }
         )

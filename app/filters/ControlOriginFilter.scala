@@ -22,7 +22,8 @@ class ControlOriginFilter @Inject()(
     // and eventually call the action. Take the result and modify it
     // by adding a new header.
     nextFilter(requestHeader).map { result =>
-      result.withHeaders("Access-Control-Allow-Origin" -> "*")
+      result.withHeaders("Access-Control-Allow-Origin" -> "http://localhost:8000",
+                         "Access-Control-Allow-Credentials" -> "true")
     }
   }
 
