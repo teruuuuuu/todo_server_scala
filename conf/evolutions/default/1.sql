@@ -8,13 +8,7 @@ CREATE TABLE "todo"
   "text" character(512),
   "index" integer
 );
-
-CREATE SEQUENCE "todo_id_seq"
-  "INCREMENT" 1
-  "MINVALUE" 1
-  "MAXVALUE" 9223372036854775807
-  "START" 1
-  "CACHE" 1;
+CREATE SEQUENCE "todo_id_seq" START 1;
 
 
 CREATE TABLE "todo_category"
@@ -23,14 +17,7 @@ CREATE TABLE "todo_category"
   "name" character(512),
   "index" integer
 );
-
-CREATE SEQUENCE "todo_category_id_seq"
-  "INCREMENT" 1
-  "MINVALUE" 1
-  "MAXVALUE" 9223372036854775807
-  "START" 1
-  "CACHE" 1;
-
+CREATE SEQUENCE "todo_category_id_seq" START 1;
 
 # --- !Downs
 

@@ -8,7 +8,7 @@ export function  todo_init() {
 
   const data = {
   }
-  return createRequestData( REQUEST_URL.TODO_INIT, 'JSON', 'GET',  null,  response_action);
+  return createRequestData( REQUEST_URL.TODO_INIT, 'JSON', 'GET',  data,  response_action);
 }
 
 export function  todo_add(categoryId, title, text) {

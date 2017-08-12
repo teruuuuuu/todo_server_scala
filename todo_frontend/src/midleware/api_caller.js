@@ -32,7 +32,7 @@ const api_caller = function actionApiCall() {
         scriptCharset: 'utf-8',
         xhrFields: {withCredentials: true},
         //contentType: remote.contentType,
-        success: data => {
+        success: function(data, status, xhr){
           if([REQUEST_URL.TODO_ADD, REQUEST_URL.TODO_DELTE, REQUEST_URL.TODO_MOVE,
               REQUEST_URL.LIST_ADD,REQUEST_URL.LIST_DELETE, REQUEST_URL.LIST_ADD].indexOf(remote.url) >= 0){
                 connection.send("update");

@@ -19,10 +19,15 @@ class TodoContoroller  @Inject()(val messagesApi: MessagesApi,
 
 
   def todos = Action { implicit request =>
-    db.withTransaction { tr =>
-      try {
-        Ok(todoViewRes)
-      }
+    request.session.get("loginUserId") match {
+      case None =>
+        Ok("")
+      case Some(x) =>
+        db.withTransaction { tr =>
+          try {
+            Ok(todoViewRes)
+          }
+        }
     }
   }
 

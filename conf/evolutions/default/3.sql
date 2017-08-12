@@ -24,17 +24,10 @@ CREATE TABLE "user_group_relation"
 );
 CREATE SEQUENCE "user_group_relation_id_seq" START 1;
 
-CREATE TABLE "group_todo_category_relation"
-(
-  "id" bigint PRIMARY KEY,
-  "group_id" bigint,
-  "todo_category_id" bigint
-);
-CREATE SEQUENCE "group_todo_category_relation_id_seq" START 1;
-
 CREATE TABLE "todo_category"
 (
   "id" bigint PRIMARY KEY,
+  "group_id" bigint,
   "index" integer,
   "name" character(512)
 );
@@ -49,6 +42,7 @@ CREATE TABLE "todo"
   "text" character(512)
 );
 CREATE SEQUENCE "todo_id_seq" START 1;
+
 
 # --- !Downs
 
