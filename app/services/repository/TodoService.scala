@@ -104,7 +104,11 @@ class TodoService @Inject()() {
 
   def getAllTodo(db: Database): Seq[Todo] = {
     db.withConnection { implicit connection =>
-      SQL("select * from todo order by index").as(todoParser.*)
+      var sqlResult = SQL("select * from todo order by index").as(todoParser.*)
+      for {
+        todo <- sqlResult
+      } yield Todo(todo.id, todo.category_id, todo.title.trim, todo.text.trim, todo.index)
+
     }
   }
 
@@ -171,7 +175,10 @@ class TodoService @Inject()() {
 
   def getAllTodoCategory(db: Database): Seq[TodoCategory] = {
     db.withConnection { implicit connection =>
-      SQL("select * from todo_category order by index").as(todoCategoryParser.*)
+      var sqlResult = SQL("select * from todo_category order by index").as(todoCategoryParser.*)
+      for {
+        category <- sqlResult
+      } yield TodoCategory(category.id, category.name.trim, category.index)
     }
   }
 
@@ -189,10 +196,10 @@ class TodoService @Inject()() {
         cat._2.map(_.index).map(index =>
           todoGroup.contains(cat._1) match{
             case true =>
-              ret = ret :+ new TodoView(cat._1, name, index, todoGroup.get(cat._1))
+              ret = ret :+ TodoView(cat._1, name, index, todoGroup.get(cat._1))
               //TodoView(cat._1, name._1, index._1, todoGroup.get(cat._1)) 深くなるのでやめとく
             case false =>
-              ret = ret :+ new TodoView(cat._1, name, index, Option(Seq[Todo]()))
+              ret = ret :+ TodoView(cat._1, name, index, Option(Seq[Todo]()))
           }
 
         )
