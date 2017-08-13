@@ -26,6 +26,7 @@ render(
   <BrowserRouter >
     <Switch>
       <Route exact path="/" component={AppRouter}/>
+      <Redirect from="*" to="/" />
     </Switch>
   </BrowserRouter>
   </Provider>

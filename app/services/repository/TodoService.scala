@@ -173,9 +173,15 @@ class TodoService @Inject()() {
     }
   }
 
-  def getAllTodoCategory(db: Database): Seq[TodoCategory] = {
+  def getAllTodoCategory(db: Database, groupId: Long): Seq[TodoCategory] = {
     db.withConnection { implicit connection =>
-      var sqlResult = SQL("select * from todo_category order by index").as(todoCategoryParser.*)
+      var sqlResult = SQL(
+        """
+          select * from todo_category where group_id = {group_id} order by index
+        """
+      ).on(
+          'group_id -> groupId
+      ).as(todoCategoryParser.*)
       for {
         category <- sqlResult
       } yield TodoCategory(category.id, category.name.trim, category.index)
@@ -185,8 +191,8 @@ class TodoService @Inject()() {
   /**********************************************************************************
     * SQL for view
     *********************************************************************************/
-  def todoList(db: Database): Seq[TodoView] = {
-    val todoCategorys = getAllTodoCategory(db)
+  def todoList(db: Database, groupId: Long): Seq[TodoView] = {
+    val todoCategorys = getAllTodoCategory(db, groupId)
     val todos = getAllTodo(db)
     val todoGroup = todos.groupBy(_.category_id)
 

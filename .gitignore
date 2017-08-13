@@ -3,6 +3,7 @@ logs
 
 /typescript_front/
 /todo_frontend_back/
+/public/
 
 *.class
 *.log

@@ -1,0 +1,11 @@
+{
+  "TODO_INIT": "/todo",
+  "TODO_ADD": "/todo/add",
+  "TODO_DELTE": "/todo/delete",
+  "TODO_MOVE": "/todo/move",
+  "LIST_ADD": "/todo/add_list",
+  "LIST_MOVE": "/todo/move_list",
+  "LIST_DELETE": "/todo/delete_list",
+  "LOGIN": "/login",
+  "TODO_WEBSOCKET": "ws://" + location.host + "/chat"
+}

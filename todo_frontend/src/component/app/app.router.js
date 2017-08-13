@@ -12,6 +12,7 @@ import Login from './login.app';
 import TodoApp from './todo.app';
 
 import CommonAlert from '../shared/common-alert';
+import RequestAgent from '../shared/request-agent';
 
 
 const getChildContext = function(){
@@ -39,21 +40,19 @@ export default class AppRouter extends Component {
   }
 
   pageSwitch(){
+    var pageComponent = [];
+    pageComponent.push(<CommonAlert key="commonAlert"/>);
+    pageComponent.push(<RequestAgent key="requestAgent"/>);
     if(!this.props.loginUser.isLogin){
-      return (
-        <div>
-          <Login/>
-          <CommonAlert />
-        </div>
-      );
+      pageComponent.push(<Login key="loginComponent"/>);
     }else{
-      return (
-        <div>
-          <TodoApp/>
-          <CommonAlert />
-        </div>
-      );
+      pageComponent.push(<TodoApp key="todoComponent"/>);
     }
+    return(
+      <div>
+        {pageComponent}
+      </div>
+    );
   }
 
   render() {

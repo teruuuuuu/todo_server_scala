@@ -44,17 +44,6 @@ class UserService @Inject()() {
           Option(UserMst(opUser.seq_num, opUser.user_id.trim, opUser.family_name.trim, opUser.first_name.trim, opUser.password.trim))
         case None => None
       }
-
-
-      /*
-      user match{
-        case None =>
-          None
-        case UserMst =>
-          //User(user.seq_num, user.user)
-          Option(UserMst(user.seq_num, user_id, family_name.trim, first_name.trim, password.trim))
-      }
-      */
     }
   }
 

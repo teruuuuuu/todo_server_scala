@@ -7,7 +7,7 @@ import $      from 'jquery'
 // ミドルウェアの宣言
 const api_caller = function actionApiCall() {
   var savedNext = null;
-  var connection = new WebSocket("ws://www16436ui.sakura.ne.jp:8080/chat");
+  var connection = new WebSocket(REQUEST_URL.TODO_WEBSOCKET);
   var send = function () {
 
   };

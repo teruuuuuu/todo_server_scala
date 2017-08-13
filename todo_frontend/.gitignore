@@ -43,7 +43,5 @@ dist
 # Optional REPL history
 .node_repl_history
 
-request.url.json
-
 package-lock.json
 

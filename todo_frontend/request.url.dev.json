@@ -6,5 +6,6 @@
   "LIST_ADD": "http://localhost:9000/todo/add_list",
   "LIST_MOVE": "http://localhost:9000/todo/move_list",
   "LIST_DELETE": "http://localhost:9000/todo/delete_list",
-  "LOGIN": "http://localhost:9000/login"
+  "LOGIN": "http://localhost:9000/login",
+  "TODO_WEBSOCKET": "ws://localhost:9000/chat"
 }
