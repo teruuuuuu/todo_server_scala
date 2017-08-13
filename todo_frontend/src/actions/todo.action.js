@@ -1,12 +1,14 @@
 import faker from 'faker';
 
-export const GET_LISTS_START = 'GET_LISTS_START';
-export const GET_LISTS = 'GET_LISTS';
-export const MOVE_CARD = 'MOVE_CARD';
-export const MOVE_LIST = 'MOVE_LIST';
-export const TOGGLE_DRAGGING = 'TOGGLE_DRAGGING';
-export const ADD_TODO = 'ADD_TODO';
-export const DELETE_TODO = 'DELETE_TODO';
+import {
+  GET_LISTS,
+  GET_LISTS_START,
+  MOVE_CARD,
+  MOVE_LIST,
+  TOGGLE_DRAGGING,
+  ADD_TODO,
+  DELETE_TODO
+} from '../constants/action.define';
 
 export function getLists(quantity) {
   return dispatch => {

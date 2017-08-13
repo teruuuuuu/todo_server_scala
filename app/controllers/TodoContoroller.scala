@@ -4,6 +4,7 @@ import javax.inject.{Inject, Singleton}
 
 import controllers.dto.TodoDto
 import db.DefaultDB
+import model.GroupTodoView
 import play.api.i18n.MessagesApi
 import play.api.libs.json._
 import play.api.mvc.{Action, Controller}
@@ -30,13 +31,26 @@ class TodoContoroller  @Inject()(val messagesApi: MessagesApi,
               case 0 =>
                 Ok("")
               case _ =>
-                Ok(Json.toJson(todoService.todoList(db, todoGroupSeq(0).id)))
+                val groupId = todoGroupSeq(0).id
+                Ok(Json.toJson(GroupTodoView(groupId, Option(todoService.todoList(db, groupId)))))
             }
           }
         }
     }
   }
 
+  def groupTodos(groupId: Long) = Action { implicit request =>
+    request.session.get("loginUserId") match {
+      case None =>
+        Ok("")
+      case Some(loginUserId) =>
+        db.withTransaction { tr =>
+          try {
+            Ok(Json.toJson(GroupTodoView(groupId, Option(todoService.todoList(db, groupId)))))
+          }
+        }
+    }
+  }
 
   /*********************************************************************
     * controller for todo
@@ -60,7 +74,7 @@ class TodoContoroller  @Inject()(val messagesApi: MessagesApi,
             case 0 =>
               Ok("")
             case _ =>
-              Ok(Json.toJson(todoService.todoList(db, todoGroupSeq(0).id)))
+              Ok(Json.toJson(GroupTodoView( todoGroupSeq(0).id, Option(todoService.todoList(db, todoGroupSeq(0).id)))))
           }
         }
     }
@@ -85,7 +99,7 @@ class TodoContoroller  @Inject()(val messagesApi: MessagesApi,
             case 0 =>
               Ok("")
             case _ =>
-              Ok(Json.toJson(todoService.todoList(db, todoGroupSeq(0).id)))
+              Ok(Json.toJson(GroupTodoView( todoGroupSeq(0).id, Option(todoService.todoList(db, todoGroupSeq(0).id)))))
           }
         }
     }
@@ -127,10 +141,38 @@ class TodoContoroller  @Inject()(val messagesApi: MessagesApi,
       case Some(loginUserId) =>
         db.withTransaction { tr =>
           try {
+
+            val todoGroupSeq = todoGroupService.findUserGroup(db, loginUserId)
+            todoGroupSeq.length match {
+              case 0 =>
+                Ok("")
+              case _ =>
+                val groupId = todoGroupSeq(0).id
+                addTodoListForm.bindFromRequest.fold(
+                  errors => {},
+                  validForm => {
+                    val id = todoService.addTodoCategory(db, groupId, validForm.listTitle)
+                  }
+                )
+                Ok(Json.toJson(GroupTodoView( todoGroupSeq(0).id, Option(todoService.todoList(db, todoGroupSeq(0).id)))))
+            }
+          }
+
+        }
+    }
+  }
+
+  def addGroupTodoList(groupId: Long) = Action { implicit request =>
+    request.session.get("loginUserId") match {
+      case None =>
+        Ok("")
+      case Some(loginUserId) =>
+        db.withTransaction { tr =>
+          try {
             addTodoListForm.bindFromRequest.fold(
               errors => {},
               validForm => {
-                val id = todoService.addTodoCategory(db, validForm.listTitle)
+                val id = todoService.addTodoCategory(db, groupId, validForm.listTitle)
               }
             )
           }
@@ -139,11 +181,10 @@ class TodoContoroller  @Inject()(val messagesApi: MessagesApi,
             case 0 =>
               Ok("")
             case _ =>
-              Ok(Json.toJson(todoService.todoList(db, todoGroupSeq(0).id)))
+              Ok(Json.toJson(GroupTodoView( todoGroupSeq(0).id, Option(todoService.todoList(db, todoGroupSeq(0).id)))))
           }
         }
     }
-
   }
 
   def delTodoList = Action { implicit request =>
@@ -169,7 +210,7 @@ class TodoContoroller  @Inject()(val messagesApi: MessagesApi,
             case 0 =>
               Ok("")
             case _ =>
-              Ok(Json.toJson(todoService.todoList(db, todoGroupSeq(0).id)))
+              Ok(Json.toJson(GroupTodoView( todoGroupSeq(0).id, Option(todoService.todoList(db, todoGroupSeq(0).id)))))
           }
         }
     }

@@ -7,5 +7,5 @@
   "LIST_MOVE": "/todo/move_list",
   "LIST_DELETE": "/todo/delete_list",
   "LOGIN": "/login",
-  "TODO_WEBSOCKET": "ws://" + location.host + "/chat"
+  "TODO_WEBSOCKET": "/chat"
 }

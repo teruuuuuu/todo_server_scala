@@ -11,10 +11,12 @@ POST    /login                      controllers.LoginController.login
 
 # TodoApri
 GET     /todo                       controllers.TodoContoroller.todos
+GET     /todo/:groupId              controllers.TodoContoroller.groupTodos(groupId: Long)
 POST    /todo/add                   controllers.TodoContoroller.addTodo
 POST    /todo/delete                controllers.TodoContoroller.delTodo
 POST    /todo/move                  controllers.TodoContoroller.moveTodo
 POST    /todo/add_list              controllers.TodoContoroller.addTodoList
+POST    /todo/add_list/:groupId     controllers.TodoContoroller.addGroupTodoList(groupId: Long)
 POST    /todo/delete_list           controllers.TodoContoroller.delTodoList
 POST    /todo/move_list             controllers.TodoContoroller.moveTodoList
 

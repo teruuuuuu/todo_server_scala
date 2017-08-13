@@ -28,9 +28,8 @@ export default class CommonAlert extends React.Component {
     console.info(props);
   }
 
-  state = {
-    open: true,
-  };
+  componentWillMount(){}
+  componentWillReceiveProps(nextProps) {}
 
   handleOpen = () => {
     this.setState({open: true});
@@ -42,7 +41,6 @@ export default class CommonAlert extends React.Component {
   };
 
   render() {
-    console.info(this);
     const actions = [
       <FlatButton
         label="Ok"

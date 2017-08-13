@@ -57,7 +57,8 @@ export default class TodoComponent extends Component {
 
   componentWillMount() {
     //this.props.getLists(4);
-    this.props.callApi(RemoteService.todo_init());
+    //this.props.callApi(RemoteService.todo_init());
+    this.props.requestEnque(RemoteService.todo_init());
   }
 
   startScrolling(direction) {
@@ -114,7 +115,8 @@ export default class TodoComponent extends Component {
   }
 
   addList(listTitle){
-    this.props.callApi(RemoteService.list_add(listTitle));
+    //this.props.callApi(RemoteService.list_add(listTitle));
+    this.props.requestEnque(RemoteService.list_add(listTitle));
   }
 
   deleteList(listId){

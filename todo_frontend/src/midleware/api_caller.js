@@ -2,12 +2,17 @@ import {CALL_API, END} from '../constants/action.define'
 import * as RemoteService from '../remote/remote_todo'
 import $      from 'jquery'
 
-
-
 // ミドルウェアの宣言
 const api_caller = function actionApiCall() {
   var savedNext = null;
-  var connection = new WebSocket(REQUEST_URL.TODO_WEBSOCKET);
+  var WEBSOCKET_URL = "";
+  console.info(PROD);
+  if(PROD){
+    WEBSOCKET_URL = "ws://" + location.host + REQUEST_URL.TODO_WEBSOCKET;
+  }else{
+    WEBSOCKET_URL = REQUEST_URL.TODO_WEBSOCKET;
+  }
+  var connection = new WebSocket(WEBSOCKET_URL);
   var send = function () {
 
   };
@@ -33,6 +38,10 @@ const api_caller = function actionApiCall() {
         xhrFields: {withCredentials: true},
         //contentType: remote.contentType,
         success: function(data, status, xhr){
+          if(remote.callBack !== void 0){
+            remote.callBack();
+          }
+
           if([REQUEST_URL.TODO_ADD, REQUEST_URL.TODO_DELTE, REQUEST_URL.TODO_MOVE,
               REQUEST_URL.LIST_ADD,REQUEST_URL.LIST_DELETE, REQUEST_URL.LIST_ADD].indexOf(remote.url) >= 0){
                 connection.send("update");
@@ -48,6 +57,9 @@ const api_caller = function actionApiCall() {
           }
         },
         error: data => {
+          if(remote.callBack !== void 0){
+            remote.callBack();
+          }
           console.info(data)
         }
     });

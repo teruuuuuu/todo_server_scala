@@ -22,9 +22,10 @@ class TodoService @Inject()() {
 
   val todoCategoryParser = {
     get[Long]("id") ~
+      get[Long]("group_id") ~
       get[String]("name") ~
       get[Int]("index") map {
-      case id ~ name ~ index => TodoCategory(id, name, index)
+      case id ~ group_id ~ name ~ index => TodoCategory(id, group_id, name, index)
     }
   }
 
@@ -116,21 +117,23 @@ class TodoService @Inject()() {
   /**********************************************************************************
     * SQL for TodoCategory
     *********************************************************************************/
-  def addTodoCategory(db: Database,  name:String): Option[Long] = {
-    insertTodoCategory(db, new TodoCategory(0, name, 0))
+  def addTodoCategory(db: Database,  groupId: Long, name:String): Option[Long] = {
+    insertTodoCategory(db, new TodoCategory(0, groupId, name, 0))
   }
 
   def insertTodoCategory(db: Database, todoCategory: TodoCategory): Option[Long] ={
     db.withConnection { implicit connection =>
       SQL(
         """
-          insert into todo_category (id, name, index) values
+          insert into todo_category (id, group_id, name, index) values
           ( (select nextval('todo_category_id_seq')),
+            {groupId},
             {name},
             (select coalesce(max(index) + 1, 1) from todo_category)
            )
         """
       ).on(
+        'groupId -> todoCategory.groupId,
         'name -> todoCategory.name
       ).executeInsert()
     }
@@ -184,7 +187,7 @@ class TodoService @Inject()() {
       ).as(todoCategoryParser.*)
       for {
         category <- sqlResult
-      } yield TodoCategory(category.id, category.name.trim, category.index)
+      } yield TodoCategory(category.id, category.groupId, category.name.trim, category.index)
     }
   }
 

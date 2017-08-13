@@ -8,12 +8,16 @@ import {
   TOGGLE_DRAGGING,
   ADD_TODO,
   DELETE_TODO
-} from '../actions/todo.action';
-import { INIT_CARD } from '../constants/response.define'
+} from '../constants/action.define';
+
+import {
+  INIT_CARD
+} from '../constants/response.define'
 
 const InitialState = Record({
   isFetching: false,
   lists: [],
+  groupId: -1,
   isDragging: false
 });
 const initialState = new InitialState;
@@ -53,7 +57,7 @@ export default function todoReducer(state = initialState, action) {
       return Object.assign({}, state, { isDragging: action.isDragging})
     }
     case INIT_CARD: {
-      return Object.assign({}, state, { lists: action.data})
+      return Object.assign({}, state, { lists: action.data.todoViews, groupId: action.data.groupId})
     }
     case ADD_TODO: {
       const newLists = [...state.lists];
