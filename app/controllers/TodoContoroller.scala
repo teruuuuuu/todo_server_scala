@@ -139,58 +139,26 @@ class TodoContoroller  @Inject()(val messagesApi: MessagesApi,
     }
   }
 
-  def addGroupTodoList(groupId: Long) = Action { implicit request =>
+  def deleteCategory(categoryId: Long) = Action { implicit request =>
     request.session.get("loginUserId") match {
       case None =>
-        Ok("")
+        Ok(Json.toJson(CommonResut("fail","")))
       case Some(loginUserId) =>
         db.withTransaction { tr =>
           try {
-            addTodoListForm.bindFromRequest.fold(
-              errors => {},
-              validForm => {
-                val id = todoService.addTodoCategory(db, groupId, validForm.listTitle)
-              }
-            )
+            todoService.getTodoByCategory(db, categoryId).foreach{
+              todo =>
+                todoService.deleteTodo(db, todo.id)
+            }
+            todoService.deleteTodoCategory(db, categoryId)
           }
-          val todoGroupSeq = todoGroupService.findUserGroup(db, loginUserId)
-          todoGroupSeq.length match {
-            case 0 =>
-              Ok("")
-            case _ =>
-              Ok(Json.toJson(GroupTodoView( todoGroupSeq(0).id, Option(todoService.todoList(db, todoGroupSeq(0).id)))))
-          }
+          Ok(Json.toJson(CommonResut("success","")))
         }
     }
   }
 
-  def delTodoList = Action { implicit request =>
-    request.session.get("loginUserId") match {
-      case None =>
-        Ok("")
-      case Some(loginUserId) =>
-        db.withTransaction { tr =>
-          try {
-            delTodoListForm.bindFromRequest.fold(
-              errors => {},
-              validForm => {
-                todoService.getTodoByCategory(db, validForm.categoryId).foreach{
-                  todo =>
-                    todoService.deleteTodo(db, todo.id)
-                }
-                todoService.deleteTodoCategory(db, validForm.categoryId)
-              }
-            )
-          }
-          val todoGroupSeq = todoGroupService.findUserGroup(db, loginUserId)
-          todoGroupSeq.length match {
-            case 0 =>
-              Ok("")
-            case _ =>
-              Ok(Json.toJson(GroupTodoView( todoGroupSeq(0).id, Option(todoService.todoList(db, todoGroupSeq(0).id)))))
-          }
-        }
-    }
+  def categoriesPrefright(categoryId: Long) = Action {
+    Ok(Json.toJson(CommonResut("success","")))
   }
 
   def moveTodoList(groupId: Long) = Action { implicit request =>

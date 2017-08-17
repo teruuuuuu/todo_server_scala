@@ -7,7 +7,7 @@
   "TODO_MOVE": "/categories/{$1}/todos/move",
   "LIST_ADD": "/groups/{$1}/categories/add",
   "LIST_MOVE": "/groups/{$1}/categories/move",
-  "LIST_DELETE": "/todo/delete_list",
+  "LIST_DELETE": "/categories/{$1}",
   "LOGIN": "/login",
   "TODO_WEBSOCKET": "/chat"
 }

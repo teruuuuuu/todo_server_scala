@@ -88,6 +88,6 @@ export function  list_delete(categoryId) {
   const data = {
     "categoryId": categoryId
   }
-
-  return createRequestData( REQUEST_URL.LIST_DELETE, 'json', 'post',  data,  response_action );
+  const requestUrl = REQUEST_URL.LIST_DELETE.replace("{$1}", categoryId);
+  return createRequestData( requestUrl, 'json', 'DELETE',  data,  response_action );
 }

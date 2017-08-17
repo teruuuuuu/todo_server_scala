@@ -12,13 +12,14 @@ POST    /login                      controllers.LoginController.login
 # TodoApri
 GET     /todo                              controllers.TodoContoroller.todos
 GET     /groups/:groupId/todos             controllers.TodoContoroller.groupTodos(groupId: Long)
-POST    /categories/:categoryId/todos/add  controllers.TodoContoroller.addCategoryTodo(categoryId: Long)
-POST    /todos/delete/:todoId              controllers.TodoContoroller.delTodo(todoId: Long)
-POST    /categories/:categoryId/todos/move controllers.TodoContoroller.moveTodo(categoryId: Long)
 POST    /groups/:groupId/categories/add    controllers.TodoContoroller.addTodoList(groupId: Long)
-POST    /todo/add_list/:groupId            controllers.TodoContoroller.addGroupTodoList(groupId: Long)
-POST    /todo/delete_list                  controllers.TodoContoroller.delTodoList
+OPTIONS /categories/:categoryId            controllers.TodoContoroller.categoriesPrefright(categoryId: Long)
+DELETE  /categories/:categoryId            controllers.TodoContoroller.deleteCategory(categoryId: Long)
 POST    /groups/:groupId/categories/move   controllers.TodoContoroller.moveTodoList(groupId: Long)
+POST    /categories/:categoryId/todos/add  controllers.TodoContoroller.addCategoryTodo(categoryId: Long)
+POST    /categories/:categoryId/todos/move controllers.TodoContoroller.moveTodo(categoryId: Long)
+POST    /todos/delete/:todoId              controllers.TodoContoroller.delTodo(todoId: Long)
+
 
 # Websocket
 GET     /chat                       controllers.WebSocketController.chat

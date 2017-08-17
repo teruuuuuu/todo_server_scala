@@ -23,7 +23,9 @@ class ControlOriginFilter @Inject()(
     // by adding a new header.
     nextFilter(requestHeader).map { result =>
       result.withHeaders("Access-Control-Allow-Origin" -> "http://localhost:8000",
-                         "Access-Control-Allow-Credentials" -> "true")
+                         "Access-Control-Allow-Credentials" -> "true",
+                         "Access-Control-Allow-Methods" -> "GET,PUT,POST,DELETE,OPTIONS",
+                         "Access-Control-Allow-Headers" -> "X-Requested-With, Content-Type")
     }
   }
 
