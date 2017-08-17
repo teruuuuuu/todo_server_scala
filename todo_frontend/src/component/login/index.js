@@ -6,7 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 import * as LoginAction from '../../actions/login.action';
 import * as RemoteActions from '../../actions/remote';
-import * as RemoteService from '../../remote/login'
+import * as RemoteService from '../../actions/request/login'
 
 const loginAreaStyle = {
   'background': 'rgb(255, 255, 255)',
@@ -49,12 +49,15 @@ export default class LoginComponent extends Component {
     this.loginRequest = this.loginRequest.bind(this);
   }
 
+  responseCallBack() {
+  }
+
   loginRequest(){
     //this.props.loginRequest();
     const userId = this.refs.userId.getValue();
     const password = this.refs.password.getValue();
     //this.props.callApi(RemoteService.login(userId, password));
-    this.props.requestEnque(RemoteService.login(userId, password));
+    this.props.requestEnque(RemoteService.login(userId, password), this.responseCallBack);
   }
 
   render() {

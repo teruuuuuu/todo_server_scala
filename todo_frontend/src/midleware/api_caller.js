@@ -1,33 +1,11 @@
 import {CALL_API, END} from '../constants/action.define'
-import * as RemoteService from '../remote/remote_todo'
+import * as RemoteService from '../actions/request/remote_todo'
 import $      from 'jquery'
 
 // ミドルウェアの宣言
 const api_caller = function actionApiCall() {
-  var savedNext = null;
-  var WEBSOCKET_URL = "";
-  console.info(PROD);
-  if(PROD){
-    WEBSOCKET_URL = "ws://" + location.host + REQUEST_URL.TODO_WEBSOCKET;
-  }else{
-    WEBSOCKET_URL = REQUEST_URL.TODO_WEBSOCKET;
-  }
-  var connection = new WebSocket(WEBSOCKET_URL);
-  var send = function () {
-
-  };
-
-  connection.onopen = function () {
-  };
-  connection.onerror = function (error) {
-      console.log('WebSocket Error ', error);
-  };
-  connection.onmessage = function (event) {
-    remoteService(savedNext, RemoteService.todo_init());
-  };
 
   function remoteService(next, remote){
-    savedNext = next;
     $.ajax({
         url: remote.url,
         dataType: remote.dataType,
@@ -38,14 +16,7 @@ const api_caller = function actionApiCall() {
         xhrFields: {withCredentials: true},
         //contentType: remote.contentType,
         success: function(data, status, xhr){
-          if(remote.callBack !== void 0){
-            remote.callBack();
-          }
-
-          if([REQUEST_URL.TODO_ADD, REQUEST_URL.TODO_DELTE, REQUEST_URL.TODO_MOVE,
-              REQUEST_URL.LIST_ADD,REQUEST_URL.LIST_DELETE, REQUEST_URL.LIST_ADD].indexOf(remote.url) >= 0){
-                connection.send("update");
-          }
+          callBackSeq(data, status, xhr, remote.callBackQue);
 
           const new_action = remote.response_action(data)
 
@@ -57,20 +28,26 @@ const api_caller = function actionApiCall() {
           }
         },
         error: data => {
-          if(remote.callBack !== void 0){
-            remote.callBack();
-          }
+          callBackSeq(remote.callBackQue);
           console.info(data)
         }
     });
   }
 
-  return next => action => {
-    if(action.type == CALL_API){
-      remoteService(next, action.remote)
-    }else{
-      next(action)
+  function callBackSeq(data, status, xhr, callBackQue) {
+    if(callBackQue !== void 0 && callBackQue.length > 0){
+      while(callBackQue.length > 0){
+        callBackQue[0](data, status, xhr);
+        callBackQue = callBackQue.slice(1, callBackQue.length);
+      }
     }
+  }
+
+  return next => action => {
+    if(action.type == CALL_API) {
+      remoteService(next, action.remote)
+    } else if(action.type == END) {
+    } else { next(action) }
   };
 };
 

@@ -1,7 +1,7 @@
 import createRequestData from './common'
-import * as types from '../constants/action.define'
+import * as types from '../../constants/action.define'
 
-import * as CommonAlertAction from '../actions/common-alert.action';
+import * as CommonAlertAction from '../common-alert.action';
 
 export function  login(userId, password) {
   const response_action = function(data){

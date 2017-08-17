@@ -1,5 +1,5 @@
 import * as types from '../constants/action.define'
-import * as action from '../remote/login'
+import * as action from './request/login'
 
 export function loginRequest(userId, password) {
   //return { type: types.CALL_API, remote: action.login(userId, password)}

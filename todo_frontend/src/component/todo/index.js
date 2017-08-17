@@ -6,18 +6,20 @@ import HTML5Backend from 'react-dnd-html5-backend';
 
 import * as ListsActions from '../../actions/todo.action';
 import * as RemoteActions from '../../actions/remote';
-import * as RemoteService from '../../remote/remote_todo'
+import * as RemoteService from '../../actions/request/remote_todo'
 import * as TestActions from '../../actions/test_actions';
 
 
 import TodoBoard from './todo-board';
 import TodoDragLayer from './todo-drag-layer';
 import TodoListAdd from './todo-add';
+import TodoWebSocket from './todo-websocket';
 
 
 function mapStateToProps(state) {
   return {
     lists: state.todoReducer.lists,
+    groupId: state.todoReducer.groupId,
     loginUser: state.loginUser
   };
 }
@@ -36,6 +38,7 @@ export default class TodoComponent extends Component {
     moveList: PropTypes.func.isRequired,
     callApi: PropTypes.func.isRequired,
     lists: PropTypes.array.isRequired,
+    groupId: PropTypes.number.isRequired,
     loginUser: PropTypes.object
   }
 
@@ -52,14 +55,21 @@ export default class TodoComponent extends Component {
     this.deleteList = this.deleteList.bind(this);
     this.addTodo = this.addTodo.bind(this);
     this.deleteTodo = this.deleteTodo.bind(this);
-    this.state = { isScrolling: false };
+    this.onMessageFunc = this.onMessageFunc.bind(this);
+    this.state = { isScrolling: false};
+  }
+
+  initTodoList() {
+    return this.props.requestEnque(RemoteService.todo_init(this.props.groupId));
   }
 
   componentWillMount() {
-    //this.props.getLists(4);
-    //this.props.callApi(RemoteService.todo_init());
-    this.props.requestEnque(RemoteService.todo_init());
+    this.props.requestEnque(RemoteService.todo_init(this.props.groupId));
   }
+
+  componentWillReceiveProps(nextProps) {
+  }
+
 
   startScrolling(direction) {
     // if (!this.state.isScrolling) {
@@ -95,13 +105,15 @@ export default class TodoComponent extends Component {
 
   moveCard(lastX, lastY, nextX, nextY, categoryId, todoId) {
     this.props.moveCard(lastX, lastY, nextX, nextY);
-    this.props.callApi(RemoteService.todo_move(categoryId, todoId));
+    //this.props.callApi(RemoteService.todo_move(categoryId, todoId));
+    this.props.requestEnque(RemoteService.todo_move(categoryId, todoId), this.callBack(this.state.webSocket));
   }
 
   moveList(listId, nextX) {
     const { lastX } = this.findList(listId);
     this.props.moveList(lastX, nextX);
-    this.props.callApi(RemoteService.list_move(listId, nextX + 1));
+    //this.props.callApi(RemoteService.list_move(listId, nextX + 1));
+    this.props.requestEnque(RemoteService.list_move(this.props.groupId, listId, nextX + 1), this.callBack(this.state.webSocket));
   }
 
   findList(id) {
@@ -116,21 +128,33 @@ export default class TodoComponent extends Component {
 
   addList(listTitle){
     //this.props.callApi(RemoteService.list_add(listTitle));
-    this.props.requestEnque(RemoteService.list_add(listTitle));
+    //this.props.requestEnque(RemoteService.list_add(listTitle));
+    this.props.requestEnque(RemoteService.list_add(this.props.groupId, listTitle), this.callBack(this.state.webSocket));
   }
 
   deleteList(listId){
-    this.props.callApi(RemoteService.list_delete(listId));
+    //this.props.callApi(RemoteService.list_delete(listId));
+    this.props.requestEnque(RemoteService.list_delete(listId), this.callBack(this.state.webSocket));
   }
 
   addTodo(data){
     //this.props.addTodo(data);
-    this.props.callApi(RemoteService.todo_add(data.componentId, data.title, data.text));
+    //this.props.callApi(RemoteService.todo_add(data.componentId, data.title, data.text));
+    this.props.requestEnque(RemoteService.todo_add(data.componentId, data.title, data.text), this.callBack(this.state.webSocket));
   }
 
   deleteTodo(data){
     //this.props.deleteTodo(data)
-    this.props.callApi(RemoteService.todo_delete(data.id));
+    //this.props.callApi(RemoteService.todo_delete(data.id));
+    this.props.requestEnque(RemoteService.todo_delete(data.id), this.callBack(this.state.webSocket));
+  }
+
+  onMessageFunc() {
+    this.props.requestEnque(RemoteService.todo_init(this.props.groupId));
+  }
+
+  callBack(connection) {
+    return this.refs.webSocket.createSend(this.refs.webSocket.state.todoWebSocket);
   }
 
   render() {
@@ -160,6 +184,8 @@ export default class TodoComponent extends Component {
             addList={this.addList}
           />
         </div>
+        <TodoWebSocket ref="webSocket"
+          onMessageFunc={this.onMessageFunc}/>
       </div>
 
     );

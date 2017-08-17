@@ -1,10 +1,12 @@
 {
   "TODO_INIT": "/todo",
+  "GROUP_TODO_INIT": "/groups/{$1}/todos",
   "TODO_ADD": "/todo/add",
-  "TODO_DELTE": "/todo/delete",
-  "TODO_MOVE": "/todo/move",
-  "LIST_ADD": "/todo/add_list",
-  "LIST_MOVE": "/todo/move_list",
+  "CATEGORY_TODO_ADD": "/categories/{$1}/todos/add",
+  "TODO_DELTE": "/todos/delete/{$1}",
+  "TODO_MOVE": "/categories/{$1}/todos/move",
+  "LIST_ADD": "/groups/{$1}/categories/add",
+  "LIST_MOVE": "/groups/{$1}/categories/move",
   "LIST_DELETE": "/todo/delete_list",
   "LOGIN": "/login",
   "TODO_WEBSOCKET": "/chat"

@@ -2,6 +2,9 @@
 activator
 run ポート番号
 
+sbt  -Dhttp.port=9000  -jvm-debug 5050
+run
+
 # intelij IDEA
 依存性の解決
 option + Enter

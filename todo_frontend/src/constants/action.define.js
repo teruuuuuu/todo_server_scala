@@ -1,4 +1,3 @@
-export const END = 'END'
 export const CHANGE_TEXT = 'CHANGE_TEXT'
 
 

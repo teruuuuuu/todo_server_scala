@@ -1,10 +1,12 @@
 {
   "TODO_INIT": "http://localhost:9000/todo",
+  "GROUP_TODO_INIT": "http://localhost:9000/groups/{$1}/todos",
   "TODO_ADD": "http://localhost:9000/todo/add",
-  "TODO_DELTE": "http://localhost:9000/todo/delete",
-  "TODO_MOVE": "http://localhost:9000/todo/move",
-  "LIST_ADD": "http://localhost:9000/todo/add_list",
-  "LIST_MOVE": "http://localhost:9000/todo/move_list",
+  "CATEGORY_TODO_ADD": "http://localhost:9000/categories/{$1}/todos/add",
+  "TODO_DELTE": "http://localhost:9000/todos/delete/{$1}",
+  "TODO_MOVE": "http://localhost:9000/categories/{$1}/todos/move",
+  "LIST_ADD": "http://localhost:9000/groups/{$1}/categories/add",
+  "LIST_MOVE": "http://localhost:9000/groups/{$1}/categories/move",
   "LIST_DELETE": "http://localhost:9000/todo/delete_list",
   "LOGIN": "http://localhost:9000/login",
   "TODO_WEBSOCKET": "ws://localhost:9000/chat"

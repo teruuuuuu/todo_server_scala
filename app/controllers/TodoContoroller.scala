@@ -2,7 +2,7 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
-import controllers.dto.TodoDto
+import controllers.dto.{CommonDto, CommonResut, TodoDto}
 import db.DefaultDB
 import model.GroupTodoView
 import play.api.i18n.MessagesApi
@@ -13,7 +13,7 @@ import services.repository.{TodoGroupService, TodoService}
 @Singleton
 class TodoContoroller  @Inject()(val messagesApi: MessagesApi,
            defaultDB: DefaultDB,todoService: TodoService, todoGroupService: TodoGroupService)
-           extends ControllerSupport with TodoDto {
+           extends ControllerSupport with CommonDto with TodoDto {
   val db = defaultDB.db
   def todoViewRes(groupId: Long): Unit = {
     Json.toJson(todoService.todoList(db, groupId))
@@ -55,109 +55,86 @@ class TodoContoroller  @Inject()(val messagesApi: MessagesApi,
   /*********************************************************************
     * controller for todo
     ********************************************************************/
-  def addTodo = Action { implicit request =>
+  def addCategoryTodo(categoryId: Long) = Action { implicit request =>
     request.session.get("loginUserId") match {
       case None =>
-        Ok("")
+        Ok(Json.toJson(CommonResut("fail","")))
       case Some(loginUserId) =>
         db.withTransaction { tr =>
           try {
             addTodoForm.bindFromRequest.fold(
               errors => {},
               validForm => {
-                val id = todoService.addTodo(db, validForm.categoryId, validForm.title, validForm.text)
+                val id = todoService.addTodo(db, categoryId, validForm.title, validForm.text)
               }
             )
           }
-          val todoGroupSeq = todoGroupService.findUserGroup(db, loginUserId)
-          todoGroupSeq.length match {
-            case 0 =>
-              Ok("")
-            case _ =>
-              Ok(Json.toJson(GroupTodoView( todoGroupSeq(0).id, Option(todoService.todoList(db, todoGroupSeq(0).id)))))
-          }
+          Ok(Json.toJson(CommonResut("success","")))
         }
     }
   }
 
-  def delTodo = Action { implicit request =>
+  def delTodo(todoId: Long) = Action { implicit request =>
     request.session.get("loginUserId") match {
       case None =>
-        Ok("")
+        Ok(Json.toJson(CommonResut("fail","")))
       case Some(loginUserId) =>
         db.withTransaction { tr =>
           try {
-            delTodoForm.bindFromRequest.fold(
-              errors => {},
-              validForm => {
-                val id = todoService.deleteTodo(db, validForm.todoId)
-              }
-            )
+            todoService.deleteTodo(db, todoId)
           }
-          val todoGroupSeq = todoGroupService.findUserGroup(db, loginUserId)
-          todoGroupSeq.length match {
-            case 0 =>
-              Ok("")
-            case _ =>
-              Ok(Json.toJson(GroupTodoView( todoGroupSeq(0).id, Option(todoService.todoList(db, todoGroupSeq(0).id)))))
-          }
+          Ok(Json.toJson(CommonResut("success","")))
         }
     }
   }
 
-  def moveTodo = Action { implicit request =>
+  def moveTodo(categoryId: Long) = Action { implicit request =>
     db.withTransaction { tr =>
       try {
         moveTodoForm.bindFromRequest.fold(
-          errors => {},
+          errors => {
+            Ok(Json.toJson(CommonResut("fail","")))
+          },
           validForm => {
             todoService.getTodo(db, validForm.todoId).map{
               todo =>
-                val nextTodos = todoService.getTodoByCategory(db, validForm.categoryId)
+                val nextTodos = todoService.getTodoByCategory(db, categoryId)
                 nextTodos.zipWithIndex.foreach {
                   case (upTodo, index) =>
                     todoService.updateTodo(db, upTodo.copy(index = index + 1))
                 }
-                todoService.updateTodo(db, todo.copy(category_id = validForm.categoryId,index = nextTodos.length + 1))
+                todoService.updateTodo(db, todo.copy(category_id = categoryId,index = nextTodos.length + 1))
                 todoService.getTodoByCategory(db, todo.category_id).zipWithIndex.foreach{
                   case (upTodo, index) =>
                     todoService.updateTodo(db, upTodo.copy(index = index + 1))
                 }
             }
+            Ok(Json.toJson(CommonResut("success","")))
           }
         )
       }
-      Ok("")
     }
   }
+
 
   /*********************************************************************
     * controller for todo_category
     ********************************************************************/
-  def addTodoList = Action { implicit request =>
+  def addTodoList(groupId: Long) = Action { implicit request =>
     request.session.get("loginUserId") match {
       case None =>
-        Ok("")
+        Ok(Json.toJson(CommonResut("fail","")))
       case Some(loginUserId) =>
         db.withTransaction { tr =>
           try {
-
-            val todoGroupSeq = todoGroupService.findUserGroup(db, loginUserId)
-            todoGroupSeq.length match {
-              case 0 =>
-                Ok("")
-              case _ =>
-                val groupId = todoGroupSeq(0).id
-                addTodoListForm.bindFromRequest.fold(
-                  errors => {},
-                  validForm => {
-                    val id = todoService.addTodoCategory(db, groupId, validForm.listTitle)
-                  }
-                )
-                Ok(Json.toJson(GroupTodoView( todoGroupSeq(0).id, Option(todoService.todoList(db, todoGroupSeq(0).id)))))
-            }
+            addTodoListForm.bindFromRequest.fold(
+              errors => {},
+              validForm => {
+                val id = todoService.addTodoCategory(db, groupId, validForm.listTitle)
+              }
+            )
           }
-
+          Ok(Json.toJson(CommonResut("success","")))
         }
     }
   }
@@ -216,17 +193,19 @@ class TodoContoroller  @Inject()(val messagesApi: MessagesApi,
     }
   }
 
-  def moveTodoList = Action { implicit request =>
+  def moveTodoList(groupId: Long) = Action { implicit request =>
     db.withTransaction { tr =>
       try {
         moveTodoListForm.bindFromRequest.fold(
-          errors => {},
+          errors => {
+            Ok(Json.toJson(CommonResut("fail","")))
+          },
           validForm => {
             todoService.getTodoCategory(db, validForm.categoryId).map{
               moveCategory =>
                 moveCategory.index < validForm.index match{
                   case true  => {
-                    todoService.getAllTodoCategory(db, 1).zipWithIndex.foreach{
+                    todoService.getAllTodoCategory(db, groupId).zipWithIndex.foreach{
                       case (todoCategory, index) =>
                       if(todoCategory.id == moveCategory.id){
                         todoService.updateTodoCategory(db, todoCategory.copy(index = validForm.index))
@@ -236,7 +215,7 @@ class TodoContoroller  @Inject()(val messagesApi: MessagesApi,
                     }
                   }
                   case false => {
-                    todoService.getAllTodoCategory(db, 1).zipWithIndex.foreach{
+                    todoService.getAllTodoCategory(db, groupId).zipWithIndex.foreach{
                       case (todoCategory, index) =>
                         if(todoCategory.id == moveCategory.id){
                           todoService.updateTodoCategory(db, todoCategory.copy(index = validForm.index))
@@ -247,11 +226,10 @@ class TodoContoroller  @Inject()(val messagesApi: MessagesApi,
                   }
                 }
             }
-
+            Ok(Json.toJson(CommonResut("success","")))
           }
         )
       }
-      Ok("")
     }
   }
 }
