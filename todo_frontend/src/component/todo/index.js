@@ -18,7 +18,7 @@ import TodoWebSocket from './todo-websocket';
 
 function mapStateToProps(state) {
   return {
-    lists: state.todoReducer.lists,
+    todoReducer: state.todoReducer,
     groupId: state.todoReducer.groupId,
     loginUser: state.loginUser,
     webSocket: state.todoWebsocket
@@ -38,7 +38,7 @@ export default class TodoComponent extends Component {
     moveCard: PropTypes.func.isRequired,
     moveList: PropTypes.func.isRequired,
     callApi: PropTypes.func.isRequired,
-    lists: PropTypes.array.isRequired,
+    todoReducer: PropTypes.object.isRequired,
     groupId: PropTypes.number.isRequired,
     loginUser: PropTypes.object
   }
@@ -99,9 +99,9 @@ export default class TodoComponent extends Component {
     this.setState({ isScrolling: false }, clearInterval(this.scrollInterval));
   }
 
-  moveCard(lastX, lastY, nextX, nextY, categoryId, todoId) {
+  moveCard(lastX, lastY, nextX, nextY, categoryId, todoId, title, text) {
     this.props.moveCard(lastX, lastY, nextX, nextY);
-    this.props.requestEnque(RemoteService.todo_move(categoryId, todoId), CommonFunc.callBack(this.props.webSocket.webSocket));
+    this.props.requestEnque(RemoteService.todo_update(categoryId, todoId, title, text), CommonFunc.callBack(this.props.webSocket.webSocket));
   }
 
   moveList(listId, nextX) {
@@ -111,12 +111,12 @@ export default class TodoComponent extends Component {
   }
 
   findList(id) {
-    const { lists } = this.props;
-    const list = lists.filter(l => l.id === id)[0];
+    const { todoReducer } = this.props;
+    const list = todoReducer.lists.filter(l => l.id === id)[0];
 
     return {
       list,
-      lastX: lists.indexOf(list)
+      lastX: todoReducer.lists.indexOf(list)
     };
   }
 
@@ -125,13 +125,13 @@ export default class TodoComponent extends Component {
   }
 
   render() {
-    const { lists } = this.props;
+    const { todoReducer } = this.props;
 
     return (
       <div className="board-wrapper">
         <div className="board" style={{ height: '100%' }}>
           <TodoDragLayer snapToGrid={false} />
-          {lists.map((item, i) =>
+          {todoReducer.lists.map((item, i) =>
             <TodoBoard
               key={item.id}
               id={item.id}

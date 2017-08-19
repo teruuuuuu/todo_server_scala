@@ -47,9 +47,9 @@ export default function todoReducer(state = initialState, action) {
     }
     case MOVE_LIST: {
       const newLists = [...state.lists];
-      const { lastX, nextX } = action;
-      const t = newLists.splice(lastX, 1)[0];
-      newLists.splice(nextX, 0, t);
+      //const { lastX, nextX } = action;
+      const t = newLists.splice(action.lastX, 1)[0];
+      newLists.splice(action.nextX, 0, t);
       return Object.assign({}, state, { lists: newLists});
     }
     case TOGGLE_DRAGGING: {

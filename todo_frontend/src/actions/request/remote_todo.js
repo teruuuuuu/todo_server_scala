@@ -83,7 +83,7 @@ export function  todo_delete(categoryId, todoId) {
   return createRequestData( requestUrl, 'JSON', 'DELETE',  data,  response_action );
 }
 
-export function  todo_move(categoryId, todoId) {
+export function  todo_update(categoryId, todoId, title, text) {
   const response_action = function(data){
     return {type: types.END, data: data}
   }
@@ -91,7 +91,9 @@ export function  todo_move(categoryId, todoId) {
   const data = {
     "categoryId": categoryId,
     "todoId": todoId,
+    "title": title,
+    "text": text,
   }
-  const requestUrl = REQUEST_URL.TODO_MOVE.replace("{$1}", categoryId).replace("{$2}", todoId);;
+  const requestUrl = REQUEST_URL.TODO_UPDATE.replace("{$1}", categoryId).replace("{$2}", todoId);
   return createRequestData( requestUrl, 'JSON', 'PUT',  data,  response_action );
 }

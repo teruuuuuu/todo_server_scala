@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import { DropTarget, DragSource } from 'react-dnd';
-
-import TodoCardList from './card/todo-card-list';
 
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
@@ -10,6 +10,13 @@ import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 
+import * as CommonFunc from './func/common-func';
+
+import * as ListsActions from '../../actions/todo.action';
+import * as RemoteActions from '../../actions/remote';
+import * as RemoteService from '../../actions/request/remote_todo'
+
+import TodoCardList from './card/todo-card-list';
 import TodoDialog from './dialog/todo-input-dialog';
 import ListMenu from './menu/list-menu';
 
@@ -45,7 +52,7 @@ const listTarget = {
   canDrop() {
     return false;
   },
-  hover(props, monitor) {
+  hover(props, monitor, component) {
     if (!props.isScrolling) {
       if (window.innerWidth - monitor.getClientOffset().x < 200) {
         props.startScrolling('toRight');
@@ -62,11 +69,27 @@ const listTarget = {
     const { id: listId } = monitor.getItem();
     const { id: nextX } = props;
     if (listId !== nextX) {
-      props.moveList(listId, props.x);
+      //props.moveList(listId, props.x);
+      props.moveList(monitor.getItem().x, props.x);
+      props.requestEnque(RemoteService.list_move(props.groupId, monitor.getItem().id, props.x + 1), CommonFunc.callBack(props.webSocket.webSocket));
+      //const nextX = props.x + Math.round( monitor.getClientOffset().x / 200 );
+      //props.moveList( props.x, nextX);
     }
   }
 };
 
+function mapStateToProps(state) {
+  return {
+    webSocket: state.todoWebsocket,
+    groupId: state.todoReducer.groupId,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators( Object.assign({}, ListsActions, RemoteActions ), dispatch);
+}
+
+@connect(mapStateToProps, mapDispatchToProps)
 @DropTarget('list', listTarget, connectDragSource => ({
   connectDropTarget: connectDragSource.dropTarget(),
 }))
@@ -93,6 +116,7 @@ export default class TodoBoard extends Component {
     startScrolling: PropTypes.func,
     stopScrolling: PropTypes.func,
     isScrolling: PropTypes.bool,
+    groupId: PropTypes.number,
   }
 
   todoEdit(context) {
@@ -110,6 +134,8 @@ export default class TodoBoard extends Component {
   clickOk(context) {
     function clickOkFunc(event) {
       //event.props.moveCard();
+      const { selectItem } = context.state;
+      context.props.requestEnque(RemoteService.todo_update(selectItem.categoryId, selectItem.id, event.title, event.text), CommonFunc.callBack(context.props.webSocket.webSocket));
       context.setState({open: false});
     }
     return clickOkFunc;

@@ -1,6 +1,14 @@
 import React, { Component, PropTypes } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import { DropTarget } from 'react-dnd';
 import { findDOMNode } from 'react-dom';
+
+import * as CommonFunc from '../func/common-func';
+
+import * as ListsActions from '../../../actions/todo.action';
+import * as RemoteActions from '../../../actions/remote';
+import * as RemoteService from '../../../actions/request/remote_todo'
 
 import Card from './draggable-card';
 
@@ -33,6 +41,10 @@ const specs = {
     const lastX = monitor.getItem().x;
     const lastY = monitor.getItem().y;
     const nextX = props.x;
+    const title = monitor.getItem().item.title;
+    const text = monitor.getItem().item.text;
+    const todoId = monitor.getItem().id
+    const componentId = component.props.componentId
     let nextY = (lastX === nextX) ? placeholderIndex : placeholderIndex + 1;
 
 
@@ -42,9 +54,7 @@ const specs = {
       nextY = nextY + 1;
       if (lastY - nextY === 1) {
 
-        const todoId = monitor.getItem().id
-        const componentId = component.props.componentId
-        props.moveCard(lastX, lastY, nextX, nextY, componentId, todoId);
+        props.moveCard(lastX, lastY, nextX, nextY, componentId, todoId, title, text);
         return;
       }
     }
@@ -54,9 +64,8 @@ const specs = {
       return;
     }
 
-    const todoId = monitor.getItem().id
-    const componentId = component.props.componentId
-    props.moveCard(lastX, lastY, nextX, nextY, componentId, todoId);
+    props.moveCard(lastX, lastY, nextX, nextY);
+    props.requestEnque(RemoteService.todo_update(componentId, todoId, title, text), CommonFunc.callBack(props.webSocket));
   },
   hover(props, monitor, component) {
     // defines where placeholder is rendered
@@ -96,6 +105,19 @@ const specs = {
 };
 
 
+function mapStateToProps(state) {
+  return {
+    todoReducer: state.todoReducer,
+    webSocket: state.todoWebsocket.webSocket,
+    groupId: state.todoReducer.groupId,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators( Object.assign({}, ListsActions, RemoteActions), dispatch);
+}
+
+@connect(mapStateToProps, mapDispatchToProps)
 @DropTarget('card', specs, (connectDragSource, monitor) => ({
   connectDropTarget: connectDragSource.dropTarget(),
   isOver: monitor.isOver(),
@@ -123,7 +145,10 @@ export default class TodoCardList extends Component {
     startScrolling: PropTypes.func,
     stopScrolling: PropTypes.func,
     isScrolling: PropTypes.bool,
-    componentId: PropTypes.number
+    componentId: PropTypes.number,
+    webSocket: PropTypes.object,
+    groupId: PropTypes.number,
+    todoReducer: PropTypes.object.isRequired
   }
 
   render() {
