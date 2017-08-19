@@ -15,7 +15,7 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import MenuItem from 'material-ui/MenuItem';
 
 
-class TodoInputDialog extends Component {
+class TodoDialog extends Component {
   constructor(props, context) {
     super(props, context);
     this.clickOk = this.clickOk.bind(this);
@@ -71,4 +71,4 @@ class TodoInputDialog extends Component {
     );
   }
 }
-export default TodoInputDialog
+export default TodoDialog

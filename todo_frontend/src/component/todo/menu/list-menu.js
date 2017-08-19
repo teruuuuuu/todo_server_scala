@@ -11,7 +11,7 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 
-import TodoInputDialog from './todo-input-dialog';
+import TodoDialog from '../dialog/todo-input-dialog';
 
 
 const menuStyle = {
@@ -102,7 +102,7 @@ export default class ListMenu extends Component {
           <MenuItem primaryText="リストを削除" onTouchTap={this.deleteList}/>
         </IconMenu>
 
-        <TodoInputDialog open={open} handleRequestClose={this.handleRequestClose} clickOk={this.clickOk}/>
+        <TodoDialog open={open} handleRequestClose={this.handleRequestClose} clickOk={this.clickOk}/>
       </div>
     );
   }
