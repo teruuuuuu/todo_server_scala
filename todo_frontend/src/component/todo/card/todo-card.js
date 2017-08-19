@@ -24,6 +24,7 @@ function mapDispatchToProps(dispatch) {
 export default class Card extends Component {
   constructor(props, context) {
     super(props, context);
+    this.deleteTodo = this.deleteTodo.bind(this);
   }
 
   static propTypes = {
@@ -36,7 +37,7 @@ export default class Card extends Component {
     webSocket: PropTypes.object
   }
 
-  deleteTodo(data){
+  deleteTodo(){
     this.props.requestEnque(RemoteService.todo_delete(-1, this.props.item.id), this.callBack(this.props.webSocket));
   }
 

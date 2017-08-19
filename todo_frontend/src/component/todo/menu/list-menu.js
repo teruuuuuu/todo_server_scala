@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { DropTarget, DragSource } from 'react-dnd';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
@@ -12,6 +14,10 @@ import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 
 import TodoDialog from '../dialog/todo-input-dialog';
+
+import * as ListsActions from '../../../actions/todo.action';
+import * as RemoteActions from '../../../actions/remote';
+import * as RemoteService from '../../../actions/request/remote_todo'
 
 
 const menuStyle = {
@@ -29,7 +35,18 @@ const buttonStyle = {
   width: '24px'
 }
 
+function mapStateToProps(state) {
+  return {
+    webSocket: state.todoWebsocket.webSocket,
+    groupId: state.todoReducer.groupId,
+  };
+}
 
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators( Object.assign({}, ListsActions, RemoteActions), dispatch);
+}
+
+@connect(mapStateToProps, mapDispatchToProps)
 export default class ListMenu extends Component {
   constructor(props, context) {
     super(props, context);
@@ -44,9 +61,11 @@ export default class ListMenu extends Component {
   }
 
   static propTypes = {
+    componentId: PropTypes.number,
     id: PropTypes.number,
-    addTodo: PropTypes.func.isRequired,
-    deleteList: PropTypes.func.isRequired
+    webSocket: PropTypes.object,
+    groupId: PropTypes.number.isRequired,
+    requestEnque:  PropTypes.func.isRequired
   }
 
 
@@ -63,19 +82,21 @@ export default class ListMenu extends Component {
   }
 
   clickOk(data) {
-    const { id } = this.props
-    this.props.addTodo(Object.assign({}, data, { componentId: id}));
-
-    this.setState({
-      open: false,
-    });
+    const { id } = this.props;
+    this.props.requestEnque(RemoteService.todo_add( id, data.title, data.text), this.callBack(this.props.webSocket));
+    this.setState({open: false});
   }
 
   deleteList(){
-    const { id } = this.props
-    this.props.deleteList(id);
+    this.props.requestEnque(RemoteService.list_delete(this.props.groupId, this.props.id), this.callBack(this.props.webSocket));
   }
 
+  callBack(webSocket) {
+    function method(){
+      webSocket.send("update")
+    }
+    return method;
+  }
 
   render() {
     const { id } = this.props;
