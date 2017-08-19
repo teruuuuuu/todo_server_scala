@@ -15,6 +15,7 @@ case class Todo(id: Long,
                 index: Int)
 
 case class TodoCategory(id: Long,
+                        groupId: Long,
                         name: String,
                         index: Int)
 
@@ -22,3 +23,5 @@ case class TodoView(category_id: Long,
                     category_name: String,
                     category_index: Int,
                     todos: Option[Seq[Todo]])
+
+case class GroupTodoView(group_id: Long, todoViews: Option[Seq[TodoView]])

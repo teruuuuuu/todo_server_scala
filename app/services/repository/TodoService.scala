@@ -22,9 +22,10 @@ class TodoService @Inject()() {
 
   val todoCategoryParser = {
     get[Long]("id") ~
+      get[Long]("group_id") ~
       get[String]("name") ~
       get[Int]("index") map {
-      case id ~ name ~ index => TodoCategory(id, name, index)
+      case id ~ group_id ~ name ~ index => TodoCategory(id, group_id, name, index)
     }
   }
 
@@ -104,7 +105,11 @@ class TodoService @Inject()() {
 
   def getAllTodo(db: Database): Seq[Todo] = {
     db.withConnection { implicit connection =>
-      SQL("select * from todo order by index").as(todoParser.*)
+      var sqlResult = SQL("select * from todo order by index").as(todoParser.*)
+      for {
+        todo <- sqlResult
+      } yield Todo(todo.id, todo.category_id, todo.title.trim, todo.text.trim, todo.index)
+
     }
   }
 
@@ -112,21 +117,23 @@ class TodoService @Inject()() {
   /**********************************************************************************
     * SQL for TodoCategory
     *********************************************************************************/
-  def addTodoCategory(db: Database,  name:String): Option[Long] = {
-    insertTodoCategory(db, new TodoCategory(0, name, 0))
+  def addTodoCategory(db: Database,  groupId: Long, name:String): Option[Long] = {
+    insertTodoCategory(db, new TodoCategory(0, groupId, name, 0))
   }
 
   def insertTodoCategory(db: Database, todoCategory: TodoCategory): Option[Long] ={
     db.withConnection { implicit connection =>
       SQL(
         """
-          insert into todo_category (id, name, index) values
+          insert into todo_category (id, group_id, name, index) values
           ( (select nextval('todo_category_id_seq')),
+            {groupId},
             {name},
-            (select max(index) + 1 from todo_category)
+            (select coalesce(max(index) + 1, 1) from todo_category)
            )
         """
       ).on(
+        'groupId -> todoCategory.groupId,
         'name -> todoCategory.name
       ).executeInsert()
     }
@@ -169,17 +176,26 @@ class TodoService @Inject()() {
     }
   }
 
-  def getAllTodoCategory(db: Database): Seq[TodoCategory] = {
+  def getAllTodoCategory(db: Database, groupId: Long): Seq[TodoCategory] = {
     db.withConnection { implicit connection =>
-      SQL("select * from todo_category order by index").as(todoCategoryParser.*)
+      var sqlResult = SQL(
+        """
+          select * from todo_category where group_id = {group_id} order by index
+        """
+      ).on(
+          'group_id -> groupId
+      ).as(todoCategoryParser.*)
+      for {
+        category <- sqlResult
+      } yield TodoCategory(category.id, category.groupId, category.name.trim, category.index)
     }
   }
 
   /**********************************************************************************
     * SQL for view
     *********************************************************************************/
-  def todoList(db: Database): Seq[TodoView] = {
-    val todoCategorys = getAllTodoCategory(db)
+  def todoList(db: Database, groupId: Long): Seq[TodoView] = {
+    val todoCategorys = getAllTodoCategory(db, groupId)
     val todos = getAllTodo(db)
     val todoGroup = todos.groupBy(_.category_id)
 
@@ -189,10 +205,10 @@ class TodoService @Inject()() {
         cat._2.map(_.index).map(index =>
           todoGroup.contains(cat._1) match{
             case true =>
-              ret = ret :+ new TodoView(cat._1, name, index, todoGroup.get(cat._1))
+              ret = ret :+ TodoView(cat._1, name, index, todoGroup.get(cat._1))
               //TodoView(cat._1, name._1, index._1, todoGroup.get(cat._1)) 深くなるのでやめとく
             case false =>
-              ret = ret :+ new TodoView(cat._1, name, index, Option(Seq[Todo]()))
+              ret = ret :+ TodoView(cat._1, name, index, Option(Seq[Todo]()))
           }
 
         )

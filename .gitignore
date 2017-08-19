@@ -1,6 +1,11 @@
 logs
 /RUNNING_PID
 
+/typescript_front/
+/todo_frontend_back/
+/todo_frontend_back2/
+/public/
+
 *.class
 *.log
 .ensime

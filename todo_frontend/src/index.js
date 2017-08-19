@@ -3,23 +3,33 @@ import { render } from 'react-dom'
 
 import { Provider } from 'react-redux'
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import { Router, useRouterHistory } from 'react-router';
-import { createHashHistory } from 'history'
+//import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
+//import { Route, Router, useRouterHistory, IndexRoute } from 'react-router';
+//import { createHashHistory } from 'history'
+//import { createBrowserHistory } from 'history'
 
 import StoreConfig from './store/store_config'
-import { routes } from './routes';
 
+import AppRouter from './component/app/app.router';
+//import TodoApp from './component/app/todo.app';
+//import LoginApp from './component/app/login.app';
 
 injectTapEventPlugin();
 const store = StoreConfig()
 
-
 import './assets/temp.styl';
 
-const appHistory = useRouterHistory(createHashHistory)({ queryKey: false })
+
 render(
   <Provider store={store}>
-    <Router history={appHistory} routes={routes} />
+  <BrowserRouter >
+    <Switch>
+      <Route exact path="/" component={AppRouter}/>
+      <Redirect from="*" to="/" />
+    </Switch>
+  </BrowserRouter>
   </Provider>
+
   ,document.getElementById('root')
 )

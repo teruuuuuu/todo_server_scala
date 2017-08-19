@@ -1,7 +1,7 @@
 package controllers.dto
 
 import play.api.libs.json.{JsPath, Json, Writes}
-import model.{Todo, TodoCategory, TodoView}
+import model.{GroupTodoView, Todo, TodoCategory, TodoView}
 import play.api.data.Form
 import play.api.data.Forms.mapping
 import play.api.data.Forms._
@@ -35,6 +35,14 @@ trait TodoDto {
         "name" -> todoView.category_name,
         "index" -> todoView.category_index,
         "cards" -> todoView.todos
+      )
+  }
+
+  implicit lazy val groupTodoViewWrite = new Writes[GroupTodoView] {
+    def writes(groupTodoView: GroupTodoView) =
+      Json.obj(
+        "groupId" -> groupTodoView.group_id,
+        "todoViews" -> groupTodoView.todoViews
       )
   }
 

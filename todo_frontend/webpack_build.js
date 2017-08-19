@@ -38,7 +38,7 @@ export default {
     },
     {
       test: /\.(jpg|jpeg|gif|png|ico|ttf|otf|eot|svg|woff|woff2)(\?[a-z0-9]+)?$/,
-      loader: 'file-loader?name=[path][name].[ext]'
+      loader: 'file-loader?name=assets/images/[name].[ext]'
     },
     {
       test: /\.styl$/,

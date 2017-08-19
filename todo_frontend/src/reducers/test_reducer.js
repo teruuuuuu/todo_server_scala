@@ -1,4 +1,4 @@
-import { CHANGE_TEXT } from '../constants/ActionTypes'
+import { CHANGE_TEXT } from '../constants/action.define'
 
 const initialState =
   {

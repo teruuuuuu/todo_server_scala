@@ -1,0 +1,12 @@
+{
+  "TODO_INIT": "/todo",
+  "GROUP_TODO_INIT": "/groups/{$1}/todos",
+  "TODO_ADD": "/categories/{$1}/todos",
+  "TODO_DELTE": "/categories/{$1}/todos/{$2}",
+  "TODO_MOVE": "/categories/{$1}/todos/{$2}",
+  "LIST_ADD": "/groups/{$1}/categories",
+  "LIST_MOVE": "/groups/{$1}/categories/{$2}",
+  "LIST_DELETE": "/groups/{$1}/categories/{$2}",
+  "LOGIN": "/login",
+  "TODO_WEBSOCKET": "/chat"
+}

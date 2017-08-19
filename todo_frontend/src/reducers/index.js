@@ -1,15 +1,21 @@
 import { combineReducers } from 'redux'
 import { routerReducer } from 'react-router-redux'
+import alertReducer from './alert.reducer';
 import call_api from './call_api'
 import test_reducer from './test_reducer'
-import lists from './lists';
+import todoReducer from './todo.reducer';
+import loginUser from './login-user';
+import requestReducer from './request.reducer';
 
 
 const rootReducer = combineReducers({
   routing: routerReducer,
   call_api,
   test_reducer,
-  lists
+  todoReducer,
+  loginUser,
+  alertReducer,
+  requestReducer
 })
 
 export default rootReducer
