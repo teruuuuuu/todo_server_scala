@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
+import * as CommonFunc from './func/common-func';
+
 import * as ListsActions from '../../actions/todo.action';
 import * as RemoteActions from '../../actions/remote';
 import * as RemoteService from '../../actions/request/remote_todo'
-import * as TestActions from '../../actions/test_actions';
-
 
 import TodoBoard from './todo-board';
 import TodoDragLayer from './todo-drag-layer';
@@ -52,7 +52,6 @@ export default class TodoComponent extends Component {
     this.scrollLeft = this.scrollLeft.bind(this);
     this.stopScrolling = this.stopScrolling.bind(this);
     this.startScrolling = this.startScrolling.bind(this);
-    this.addList = this.addList.bind(this);
     this.onMessageFunc = this.onMessageFunc.bind(this);
     this.state = { isScrolling: false};
   }
@@ -70,7 +69,6 @@ export default class TodoComponent extends Component {
 
 
   startScrolling(direction) {
-    // if (!this.state.isScrolling) {
     switch (direction) {
       case 'toLeft':
         this.setState({ isScrolling: true }, this.scrollLeft());
@@ -103,15 +101,13 @@ export default class TodoComponent extends Component {
 
   moveCard(lastX, lastY, nextX, nextY, categoryId, todoId) {
     this.props.moveCard(lastX, lastY, nextX, nextY);
-    //this.props.callApi(RemoteService.todo_move(categoryId, todoId));
-    this.props.requestEnque(RemoteService.todo_move(categoryId, todoId), this.callBack(this.props.webSocket.webSocket));
+    this.props.requestEnque(RemoteService.todo_move(categoryId, todoId), CommonFunc.callBack(this.props.webSocket.webSocket));
   }
 
   moveList(listId, nextX) {
     const { lastX } = this.findList(listId);
     this.props.moveList(lastX, nextX);
-    //this.props.callApi(RemoteService.list_move(listId, nextX + 1));
-    this.props.requestEnque(RemoteService.list_move(this.props.groupId, listId, nextX + 1), this.callBack(this.props.webSocket.webSocket));
+    this.props.requestEnque(RemoteService.list_move(this.props.groupId, listId, nextX + 1), CommonFunc.callBack(this.props.webSocket.webSocket));
   }
 
   findList(id) {
@@ -124,19 +120,8 @@ export default class TodoComponent extends Component {
     };
   }
 
-  addList(listTitle){
-    this.props.requestEnque(RemoteService.list_add(this.props.groupId, listTitle), this.callBack(this.props.webSocket.webSocket));
-  }
-
   onMessageFunc() {
     this.props.requestEnque(RemoteService.todo_init(this.props.groupId));
-  }
-
-  callBack(webSocket) {
-    function method(){
-      webSocket.send("update")
-    }
-    return method;
   }
 
   render() {
@@ -159,9 +144,7 @@ export default class TodoComponent extends Component {
               x={i}
             />
           )}
-          <TodoListAdd
-            addList={this.addList}
-          />
+          <TodoListAdd />
         </div>
         <TodoWebSocket ref="webSocket"
           onMessageFunc={this.onMessageFunc}

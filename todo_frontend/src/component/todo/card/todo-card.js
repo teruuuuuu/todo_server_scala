@@ -2,6 +2,8 @@ import React, { Component, findDOMNode, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import * as CommonFunc from '../func/common-func';
+
 import * as ListsActions from '../../../actions/todo.action';
 import * as RemoteActions from '../../../actions/remote';
 import * as RemoteService from '../../../actions/request/remote_todo'
@@ -38,14 +40,7 @@ export default class Card extends Component {
   }
 
   deleteTodo(){
-    this.props.requestEnque(RemoteService.todo_delete(-1, this.props.item.id), this.callBack(this.props.webSocket));
-  }
-
-  callBack(webSocket) {
-    function method(){
-      webSocket.send("update")
-    }
-    return method;
+    this.props.requestEnque(RemoteService.todo_delete(-1, this.props.item.id), CommonFunc.callBack(this.props.webSocket));
   }
 
   render() {

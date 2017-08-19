@@ -49,15 +49,12 @@ export default class LoginComponent extends Component {
     this.loginRequest = this.loginRequest.bind(this);
   }
 
-  responseCallBack() {
-  }
-
   loginRequest(){
     //this.props.loginRequest();
     const userId = this.refs.userId.getValue();
     const password = this.refs.password.getValue();
     //this.props.callApi(RemoteService.login(userId, password));
-    this.props.requestEnque(RemoteService.login(userId, password), this.responseCallBack);
+    this.props.requestEnque(RemoteService.login(userId, password));
   }
 
   render() {

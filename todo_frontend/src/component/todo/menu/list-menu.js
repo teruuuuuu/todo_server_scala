@@ -15,6 +15,8 @@ import TextField from 'material-ui/TextField';
 
 import TodoDialog from '../dialog/todo-input-dialog';
 
+import * as CommonFunc from '../func/common-func';
+
 import * as ListsActions from '../../../actions/todo.action';
 import * as RemoteActions from '../../../actions/remote';
 import * as RemoteService from '../../../actions/request/remote_todo'
@@ -83,19 +85,12 @@ export default class ListMenu extends Component {
 
   clickOk(data) {
     const { id } = this.props;
-    this.props.requestEnque(RemoteService.todo_add( id, data.title, data.text), this.callBack(this.props.webSocket));
+    this.props.requestEnque(RemoteService.todo_add( id, data.title, data.text), CommonFunc.callBack(this.props.webSocket));
     this.setState({open: false});
   }
 
   deleteList(){
-    this.props.requestEnque(RemoteService.list_delete(this.props.groupId, this.props.id), this.callBack(this.props.webSocket));
-  }
-
-  callBack(webSocket) {
-    function method(){
-      webSocket.send("update")
-    }
-    return method;
+    this.props.requestEnque(RemoteService.list_delete(this.props.groupId, this.props.id), CommonFunc.callBack(this.props.webSocket));
   }
 
   render() {
