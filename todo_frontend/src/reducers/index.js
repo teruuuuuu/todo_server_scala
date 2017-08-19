@@ -4,6 +4,7 @@ import alertReducer from './alert.reducer';
 import call_api from './call_api'
 import test_reducer from './test_reducer'
 import todoReducer from './todo.reducer';
+import todoWebsocket from './todo.websocket';
 import loginUser from './login-user';
 import requestReducer from './request.reducer';
 
@@ -15,7 +16,8 @@ const rootReducer = combineReducers({
   todoReducer,
   loginUser,
   alertReducer,
-  requestReducer
+  requestReducer,
+  todoWebsocket
 })
 
 export default rootReducer

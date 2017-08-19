@@ -65,11 +65,13 @@ trait TodoDto {
     )(DelTodo.apply)(DelTodo.unapply)
   )
 
-  case class MoveTodo(categoryId: Long, todoId: Long)
+  case class MoveTodo(categoryId: Long, todoId: Long, title: String, text: String)
   implicit val moveTodoForm:Form[MoveTodo] = Form (
     mapping(
       "categoryId" -> longNumber,
-      "todoId" -> longNumber
+      "todoId" -> longNumber,
+      "title" -> text,
+      "text" -> text
     )(MoveTodo.apply)(MoveTodo.unapply)
   )
 

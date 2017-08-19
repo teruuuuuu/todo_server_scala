@@ -31,3 +31,5 @@ export const LOGOUT = 'LOGOUT'
  export const TOGGLE_DRAGGING = 'TOGGLE_DRAGGING';
  export const ADD_TODO = 'ADD_TODO';
  export const DELETE_TODO = 'DELETE_TODO';
+
+ export const INIT_TODO_WEBSOCKET = 'INIT_TODO_WEBSOCKET';

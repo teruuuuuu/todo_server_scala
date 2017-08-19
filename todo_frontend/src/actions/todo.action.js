@@ -7,7 +7,8 @@ import {
   MOVE_LIST,
   TOGGLE_DRAGGING,
   ADD_TODO,
-  DELETE_TODO
+  DELETE_TODO,
+  INIT_TODO_WEBSOCKET
 } from '../constants/action.define';
 
 export function getLists(quantity) {
@@ -71,5 +72,11 @@ export function addTodo(data) {
 export function deleteTodo(data) {
   return (dispatch) => {
     dispatch({ type: DELETE_TODO, data });
+  };
+}
+
+export function initTodoWebSocketAction(connection) {
+  return (dispatch) => {
+    dispatch({ type: INIT_TODO_WEBSOCKET, connection });
   };
 }

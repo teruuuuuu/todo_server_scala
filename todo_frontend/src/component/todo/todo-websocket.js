@@ -1,5 +1,22 @@
-import React, { Component, findDOMNode, PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
+import * as ListsActions from '../../actions/todo.action';
+import * as RemoteActions from '../../actions/remote';
+import * as RemoteService from '../../actions/request/remote_todo'
+
+function mapStateToProps(state) {
+  return {
+    webSocket: state.todoWebsocket
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators( Object.assign({}, ListsActions, RemoteActions ), dispatch);
+}
+
+@connect(mapStateToProps, mapDispatchToProps)
 export default class TodoWebSocket extends Component {
   static propTypes = {
     onMessageFunc: PropTypes.func.isRequired
@@ -10,6 +27,11 @@ export default class TodoWebSocket extends Component {
     this.state = { todoWebSocket: this.newWebSocket()};
   }
 
+  componentWillMount() {
+    this.props.initTodoWebSocketAction(this.state.todoWebSocket);
+  }
+
+
   newWebSocket() {
     var WEBSOCKET_URL = "";
     if(PROD){
@@ -18,7 +40,6 @@ export default class TodoWebSocket extends Component {
       WEBSOCKET_URL = REQUEST_URL.TODO_WEBSOCKET;
     }
     var connection = new WebSocket(WEBSOCKET_URL);
-    var send = function () {};
     connection.onopen = this.webSockOnOpen;
     connection.onerror = this.webSockOnError;
     connection.onmessage = this.createOnMessage(this.props.onMessageFunc);
@@ -33,15 +54,6 @@ export default class TodoWebSocket extends Component {
     }
     return onMessage;
   }
-
-  createSend(webSocket){
-    function send(data, status, xhr){
-      console.info(xhr);
-      webSocket.send("update");
-    }
-    return send;
-  }
-
 
   render() {
     return (

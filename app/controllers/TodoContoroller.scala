@@ -105,13 +105,14 @@ class TodoContoroller  @Inject()(val messagesApi: MessagesApi,
                 val nextTodos = todoService.getTodoByCategory(db, categoryId)
                 nextTodos.zipWithIndex.foreach {
                   case (upTodo, index) =>
-                    todoService.updateTodo(db, upTodo.copy(index = index + 1))
+                    todoService.updateTodo(db, upTodo.copy(index = index + 1 ))
                 }
-                todoService.updateTodo(db, todo.copy(category_id = categoryId,index = nextTodos.length + 1))
                 todoService.getTodoByCategory(db, todo.category_id).zipWithIndex.foreach{
                   case (upTodo, index) =>
                     todoService.updateTodo(db, upTodo.copy(index = index + 1))
                 }
+                todoService.updateTodo(db, todo.copy(category_id = categoryId,index = nextTodos.length + 1, title = validForm.title, text = validForm.text))
+
             }
             Ok(Json.toJson(CommonResut("success","")))
           }
