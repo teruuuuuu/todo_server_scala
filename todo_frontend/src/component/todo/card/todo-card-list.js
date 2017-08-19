@@ -114,6 +114,7 @@ export default class TodoCardList extends Component {
   static propTypes = {
     connectDropTarget: PropTypes.func.isRequired,
     moveCard: PropTypes.func.isRequired,
+    todoEdit: PropTypes.func,
     cards: PropTypes.array.isRequired,
     x: PropTypes.number.isRequired,
     isOver: PropTypes.bool,
@@ -144,6 +145,7 @@ export default class TodoCardList extends Component {
             item={item}
             key={item.id}
             stopScrolling={this.props.stopScrolling}
+            todoEdit={this.props.todoEdit}
           />
         );
       }

@@ -10,6 +10,7 @@ import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 
+import TodoDialog from './dialog/todo-input-dialog';
 import ListMenu from './menu/list-menu';
 
 
@@ -77,6 +78,7 @@ export default class TodoBoard extends Component {
 
   constructor(props, context) {
     super(props, context);
+    this.state = { open: false, selectItem: null };
   }
 
   static propTypes = {
@@ -93,10 +95,38 @@ export default class TodoBoard extends Component {
     isScrolling: PropTypes.bool,
   }
 
+  todoEdit(context) {
 
+    function todoEditFunc(item, x, y){
+      //context.refs.todoDialog.props.title = item.title;
+      //context.refs.todoDialog.props.text = item.text;
+      //context.refs.todoDialog.showSet(item);
+      context.setState({open: true});
+      context.setState({selectItem: item});
+    }
+    return todoEditFunc;
+  }
+
+  clickOk(context) {
+    function clickOkFunc(event) {
+      //event.props.moveCard();
+      context.setState({open: false});
+    }
+    return clickOkFunc;
+  }
+
+  handleRequestClose(context) {
+    function handleRequestCloseFunc(){
+      context.setState({
+        open: false,
+      });
+    }
+    return handleRequestCloseFunc;
+  }
 
   render() {
     const { connectDropTarget, connectDragSource, item, id, x, moveCard, isDragging } = this.props;
+    const { open, selectItem } = this.state;
     const opacity = isDragging ? 0.5 : 1;
 
     return connectDragSource(connectDropTarget(
@@ -114,8 +144,9 @@ export default class TodoBoard extends Component {
           stopScrolling={this.props.stopScrolling}
           isScrolling={this.props.isScrolling}
           componentId={id}
+          todoEdit={this.todoEdit(this)}
         />
-
+        <TodoDialog menuName="TODO編集" selectItem={selectItem} open={open} handleRequestClose={this.handleRequestClose(this)} clickOk={this.clickOk(this)} ref="todoDialog"/>
       </div>
     ));
   }

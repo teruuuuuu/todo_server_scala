@@ -147,8 +147,7 @@ export default class TodoComponent extends Component {
           <TodoListAdd />
         </div>
         <TodoWebSocket ref="webSocket"
-          onMessageFunc={this.onMessageFunc}
-          callBackFunc={this.callBackFunc}/>
+          onMessageFunc={this.onMessageFunc}/>
       </div>
 
     );

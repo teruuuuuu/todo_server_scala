@@ -57,9 +57,7 @@ export default class ListMenu extends Component {
     this.deleteList = this.deleteList.bind(this);
     this.handleTouchTap = this.handleTouchTap.bind(this);
 
-    this.state = {
-      open: false
-    };
+    this.state = { open: false };
   }
 
   static propTypes = {
@@ -118,7 +116,7 @@ export default class ListMenu extends Component {
           <MenuItem primaryText="リストを削除" onTouchTap={this.deleteList}/>
         </IconMenu>
 
-        <TodoDialog open={open} handleRequestClose={this.handleRequestClose} clickOk={this.clickOk}/>
+        <TodoDialog menuName="TODO追加" open={open} handleRequestClose={this.handleRequestClose} clickOk={this.clickOk}/>
       </div>
     );
   }

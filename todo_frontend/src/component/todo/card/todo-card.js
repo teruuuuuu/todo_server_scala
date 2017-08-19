@@ -27,10 +27,12 @@ export default class Card extends Component {
   constructor(props, context) {
     super(props, context);
     this.deleteTodo = this.deleteTodo.bind(this);
+    this.todoEdit = this.todoEdit.bind(this);
   }
 
   static propTypes = {
     deleteTodo: PropTypes.func,
+    todoEdit: PropTypes.func,
     style: PropTypes.object,
     item: PropTypes.object.isRequired,
     key: PropTypes.object,
@@ -39,14 +41,20 @@ export default class Card extends Component {
     webSocket: PropTypes.object
   }
 
-  deleteTodo(){
+  deleteTodo(event){
+    event.stopPropagation();
     this.props.requestEnque(RemoteService.todo_delete(-1, this.props.item.id), CommonFunc.callBack(this.props.webSocket));
+  }
+
+  todoEdit(event){
+    event.stopPropagation();
+    this.props.todoEdit(this.props.item, this.props.x, this.props.y);
   }
 
   render() {
     const { style, item} = this.props;
     return (
-      <div style={style} className="item" id={style ? item.id : null}>
+      <div style={style} className="item" id={style ? item.id : null} onClick={this.todoEdit}>
         <div className="item-name">{item.title}</div>
         <div className="item-container">
           <div className="item-content">

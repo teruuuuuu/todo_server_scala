@@ -69,6 +69,7 @@ export default class CardComponent extends Component {
     item: PropTypes.object,
     connectDragSource: PropTypes.func.isRequired,
     connectDragPreview: PropTypes.func.isRequired,
+    todoEdit: PropTypes.func,
     isDragging: PropTypes.bool.isRequired,
     x: PropTypes.number.isRequired,
     y: PropTypes.number,
@@ -86,7 +87,7 @@ export default class CardComponent extends Component {
 
     return connectDragSource(
       <div>
-        <Card style={getStyles(isDragging)} item={item} />
+        <Card style={getStyles(isDragging)} item={item} todoEdit={this.props.todoEdit} x={x} y={y}/>
       </div>
     );
   }
