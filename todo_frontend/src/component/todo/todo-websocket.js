@@ -3,6 +3,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ListsActions from '../../actions/todo.action';
+import * as RemoteActions from '../../actions/remote';
+import * as RemoteService from '../../actions/request/remote_todo'
 
 function mapStateToProps(state) {
   return {
@@ -11,7 +13,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators( Object.assign({}, ListsActions ), dispatch);
+  return bindActionCreators( Object.assign({}, ListsActions, RemoteActions ), dispatch);
 }
 
 @connect(mapStateToProps, mapDispatchToProps)

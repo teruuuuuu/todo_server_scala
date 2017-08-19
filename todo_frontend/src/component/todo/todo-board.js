@@ -78,7 +78,6 @@ export default class TodoBoard extends Component {
   constructor(props, context) {
     super(props, context);
     this.addTodo = this.addTodo.bind(this);
-    this.deleteTodo = this.deleteTodo.bind(this);
   }
 
   static propTypes = {
@@ -94,7 +93,6 @@ export default class TodoBoard extends Component {
     stopScrolling: PropTypes.func,
     isScrolling: PropTypes.bool,
     addTodo: PropTypes.func.isRequired,
-    deleteTodo: PropTypes.func.isRequired,
     deleteList: PropTypes.func.isRequired,
   }
 
@@ -102,9 +100,6 @@ export default class TodoBoard extends Component {
     this.props.addTodo(data);
   }
 
-  deleteTodo(data){
-    this.props.deleteTodo(data);
-  }
 
   render() {
     const { connectDropTarget, connectDragSource, item, id, x, moveCard, isDragging } = this.props;
@@ -124,7 +119,6 @@ export default class TodoBoard extends Component {
           startScrolling={this.props.startScrolling}
           stopScrolling={this.props.stopScrolling}
           isScrolling={this.props.isScrolling}
-          deleteTodo={this.deleteTodo}
           componentId={id}
         />
 

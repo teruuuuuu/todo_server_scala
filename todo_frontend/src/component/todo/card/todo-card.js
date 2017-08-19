@@ -2,6 +2,10 @@ import React, { Component, findDOMNode, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import * as ListsActions from '../../../actions/todo.action';
+import * as RemoteActions from '../../../actions/remote';
+import * as RemoteService from '../../../actions/request/remote_todo'
+
 const galPng = require('../../../assets/images/gal.png');
 const delPng = require('../../../assets/images/del.png');
 
@@ -13,14 +17,13 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators( Object.assign({} ), dispatch);
+  return bindActionCreators( Object.assign({}, ListsActions, RemoteActions), dispatch);
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class Card extends Component {
   constructor(props, context) {
     super(props, context);
-    this.deleteTodo = this.deleteTodo.bind(this);
   }
 
   static propTypes = {
@@ -34,7 +37,14 @@ export default class Card extends Component {
   }
 
   deleteTodo(data){
-    this.props.deleteTodo(data);
+    this.props.requestEnque(RemoteService.todo_delete(-1, this.props.item.id), this.callBack(this.props.webSocket));
+  }
+
+  callBack(webSocket) {
+    function method(){
+      webSocket.send("update")
+    }
+    return method;
   }
 
   render() {

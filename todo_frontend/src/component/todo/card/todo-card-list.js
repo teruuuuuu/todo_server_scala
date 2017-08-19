@@ -105,7 +105,6 @@ const specs = {
 export default class TodoCardList extends Component {
   constructor(props, context) {
     super(props, context);
-    this.deleteTodo = this.deleteTodo.bind(this);
     this.state = {
       placeholderIndex: undefined,
       isScrolling: false,
@@ -123,16 +122,11 @@ export default class TodoCardList extends Component {
     startScrolling: PropTypes.func,
     stopScrolling: PropTypes.func,
     isScrolling: PropTypes.bool,
-    deleteTodo: PropTypes.func,
     componentId: PropTypes.number
   }
 
-  deleteTodo(data){
-    this.props.deleteTodo(data)
-  }
-
   render() {
-    const { connectDropTarget, x, cards, isOver, canDrop, deleteTodo } = this.props;
+    const { connectDropTarget, x, cards, isOver, canDrop } = this.props;
     const { placeholderIndex } = this.state;
 
     let toPlaceFirst;
@@ -150,7 +144,6 @@ export default class TodoCardList extends Component {
             item={item}
             key={item.id}
             stopScrolling={this.props.stopScrolling}
-            deleteTodo={this.props.deleteTodo}
           />
         );
       }

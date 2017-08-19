@@ -55,7 +55,6 @@ export default class TodoComponent extends Component {
     this.addList = this.addList.bind(this);
     this.deleteList = this.deleteList.bind(this);
     this.addTodo = this.addTodo.bind(this);
-    this.deleteTodo = this.deleteTodo.bind(this);
     this.onMessageFunc = this.onMessageFunc.bind(this);
     this.state = { isScrolling: false};
   }
@@ -139,10 +138,6 @@ export default class TodoComponent extends Component {
     this.props.requestEnque(RemoteService.todo_add( data.componentId, data.title, data.text), this.callBack(this.props.webSocket.webSocket));
   }
 
-  deleteTodo(data){
-    this.props.requestEnque(RemoteService.todo_delete(-1, data.id), this.callBack(this.props.webSocket.webSocket));
-  }
-
   onMessageFunc() {
     this.props.requestEnque(RemoteService.todo_init(this.props.groupId));
   }
@@ -173,7 +168,6 @@ export default class TodoComponent extends Component {
               isScrolling={this.state.isScrolling}
               x={i}
               addTodo={this.addTodo}
-              deleteTodo={this.deleteTodo}
               deleteList={this.deleteList}
             />
           )}
