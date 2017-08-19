@@ -65,7 +65,7 @@ class TodoContoroller  @Inject()(val messagesApi: MessagesApi,
             addTodoForm.bindFromRequest.fold(
               errors => {},
               validForm => {
-                val id = todoService.addTodo(db, categoryId, validForm.title, validForm.text)
+                val id = todoService.addTodo(db, validForm.categoryId, validForm.title, validForm.text)
               }
             )
           }
@@ -74,7 +74,11 @@ class TodoContoroller  @Inject()(val messagesApi: MessagesApi,
     }
   }
 
-  def delTodo(todoId: Long) = Action { implicit request =>
+  def todoPrefright(categoryId: Long, todoId: Long) = Action {
+    Ok(Json.toJson(CommonResut("success","")))
+  }
+
+  def delTodo(categoryId: Long, todoId: Long) = Action { implicit request =>
     request.session.get("loginUserId") match {
       case None =>
         Ok(Json.toJson(CommonResut("fail","")))
@@ -88,7 +92,7 @@ class TodoContoroller  @Inject()(val messagesApi: MessagesApi,
     }
   }
 
-  def moveTodo(categoryId: Long) = Action { implicit request =>
+  def moveTodo(categoryId: Long, todoId: Long) = Action { implicit request =>
     db.withTransaction { tr =>
       try {
         moveTodoForm.bindFromRequest.fold(
@@ -139,7 +143,7 @@ class TodoContoroller  @Inject()(val messagesApi: MessagesApi,
     }
   }
 
-  def deleteCategory(categoryId: Long) = Action { implicit request =>
+  def deleteCategory(groupId: Long, categoryId: Long) = Action { implicit request =>
     request.session.get("loginUserId") match {
       case None =>
         Ok(Json.toJson(CommonResut("fail","")))
@@ -157,11 +161,11 @@ class TodoContoroller  @Inject()(val messagesApi: MessagesApi,
     }
   }
 
-  def categoriesPrefright(categoryId: Long) = Action {
+  def categoriesPrefright(groupId: Long, categoryId: Long) = Action {
     Ok(Json.toJson(CommonResut("success","")))
   }
 
-  def moveTodoList(groupId: Long) = Action { implicit request =>
+  def moveTodoList(groupId: Long, categoryId: Long) = Action { implicit request =>
     db.withTransaction { tr =>
       try {
         moveTodoListForm.bindFromRequest.fold(

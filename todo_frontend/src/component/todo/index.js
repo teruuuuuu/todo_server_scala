@@ -134,19 +134,19 @@ export default class TodoComponent extends Component {
 
   deleteList(listId){
     //this.props.callApi(RemoteService.list_delete(listId));
-    this.props.requestEnque(RemoteService.list_delete(listId), this.callBack(this.state.webSocket));
+    this.props.requestEnque(RemoteService.list_delete(this.props.groupId, listId), this.callBack(this.state.webSocket));
   }
 
   addTodo(data){
     //this.props.addTodo(data);
     //this.props.callApi(RemoteService.todo_add(data.componentId, data.title, data.text));
-    this.props.requestEnque(RemoteService.todo_add(data.componentId, data.title, data.text), this.callBack(this.state.webSocket));
+    this.props.requestEnque(RemoteService.todo_add( data.componentId, data.title, data.text), this.callBack(this.state.webSocket));
   }
 
   deleteTodo(data){
     //this.props.deleteTodo(data)
     //this.props.callApi(RemoteService.todo_delete(data.id));
-    this.props.requestEnque(RemoteService.todo_delete(data.id), this.callBack(this.state.webSocket));
+    this.props.requestEnque(RemoteService.todo_delete(-1, data.id), this.callBack(this.state.webSocket));
   }
 
   onMessageFunc() {

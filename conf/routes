@@ -2,6 +2,8 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
+GET     /                                                        controllers.RedirectController.index
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
@@ -10,16 +12,18 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 POST    /login                      controllers.LoginController.login
 
 # TodoApri
-GET     /todo                              controllers.TodoContoroller.todos
-GET     /groups/:groupId/todos             controllers.TodoContoroller.groupTodos(groupId: Long)
-POST    /groups/:groupId/categories/add    controllers.TodoContoroller.addTodoList(groupId: Long)
-OPTIONS /categories/:categoryId            controllers.TodoContoroller.categoriesPrefright(categoryId: Long)
-DELETE  /categories/:categoryId            controllers.TodoContoroller.deleteCategory(categoryId: Long)
-POST    /groups/:groupId/categories/move   controllers.TodoContoroller.moveTodoList(groupId: Long)
-POST    /categories/:categoryId/todos/add  controllers.TodoContoroller.addCategoryTodo(categoryId: Long)
-POST    /categories/:categoryId/todos/move controllers.TodoContoroller.moveTodo(categoryId: Long)
-POST    /todos/delete/:todoId              controllers.TodoContoroller.delTodo(todoId: Long)
-
+GET     /todo                                                     controllers.TodoContoroller.todos
+## category
+POST    /groups/:groupId/categories                               controllers.TodoContoroller.addTodoList(groupId: Long)
+OPTIONS /groups/:groupId/categories/:categoryId                   controllers.TodoContoroller.categoriesPrefright(groupId: Long, categoryId: Long)
+DELETE  /groups/:groupId/categories/:categoryId                   controllers.TodoContoroller.deleteCategory(groupId: Long, categoryId: Long)
+PUT     /groups/:groupId/categories/:categoryId                   controllers.TodoContoroller.moveTodoList(groupId: Long, categoryId: Long)
+## todo
+GET     /groups/:groupId/todos                                    controllers.TodoContoroller.groupTodos(groupId: Long)
+POST    /categories/:categoryId/todos                             controllers.TodoContoroller.addCategoryTodo(categoryId: Long)
+OPTIONS /categories/:categoryId/todos/:todoId                     controllers.TodoContoroller.todoPrefright(categoryId: Long, todoId: Long)
+DELETE  /categories/:categoryId/todos/:todoId                     controllers.TodoContoroller.delTodo(categoryId: Long, todoId: Long)
+PUT     /categories/:categoryId/todos/:todoId                     controllers.TodoContoroller.moveTodo(categoryId: Long, todoId: Long)
 
 # Websocket
 GET     /chat                       controllers.WebSocketController.chat
