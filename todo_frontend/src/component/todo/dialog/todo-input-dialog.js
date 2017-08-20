@@ -15,7 +15,7 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import MenuItem from 'material-ui/MenuItem';
 
 
-class TodoInputDialog extends Component {
+export default class TodoDialog extends Component {
   constructor(props, context) {
     super(props, context);
     this.clickOk = this.clickOk.bind(this);
@@ -30,6 +30,13 @@ class TodoInputDialog extends Component {
     handleRequestClose: PropTypes.func.isRequired,
     componentId: PropTypes.number,
     open: PropTypes.bool,
+    menuName: PropTypes.string.isRequired,
+    selectItem: PropTypes.object
+  }
+
+  showSet(item) {
+    this.props.title = item.title;
+    this.props.text = item.text;
   }
 
   clickOk() {
@@ -42,10 +49,9 @@ class TodoInputDialog extends Component {
   }
 
   render() {
-    const {
-      open
-    } = this.props
-
+    const { open, menuName, selectItem } = this.props;
+    const title = selectItem == null ? "" : selectItem.title;
+    const text = selectItem == null ? "" : selectItem.text;
 
 
     const standardActions = (
@@ -60,15 +66,14 @@ class TodoInputDialog extends Component {
       <div >
         <Dialog
           open={open}
-          title="TODO追加"
+          title={menuName}
           actions={standardActions}
           onRequestClose={this.props.handleRequestClose}
         >
-          <TextField hintText="title" ref="title" /><br />
-          <TextField hintText="text"ref="text" multiLine={true} rows={1} /><br />
+          <TextField hintText="title" ref="title" defaultValue={title} /><br />
+          <TextField hintText="text" ref="text" defaultValue={text} multiLine={true} rows={1} /><br />
         </Dialog>
       </div>
     );
   }
 }
-export default TodoInputDialog

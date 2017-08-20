@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { DropTarget, DragSource } from 'react-dnd';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
@@ -11,7 +13,13 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 
-import TodoInputDialog from './todo-input-dialog';
+import TodoDialog from '../dialog/todo-input-dialog';
+
+import * as CommonFunc from '../func/common-func';
+
+import * as ListsActions from '../../../actions/todo.action';
+import * as RemoteActions from '../../../actions/remote';
+import * as RemoteService from '../../../actions/request/remote_todo'
 
 
 const menuStyle = {
@@ -29,7 +37,18 @@ const buttonStyle = {
   width: '24px'
 }
 
+function mapStateToProps(state) {
+  return {
+    webSocket: state.todoWebsocket.webSocket,
+    groupId: state.todoReducer.groupId,
+  };
+}
 
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators( Object.assign({}, ListsActions, RemoteActions), dispatch);
+}
+
+@connect(mapStateToProps, mapDispatchToProps)
 export default class ListMenu extends Component {
   constructor(props, context) {
     super(props, context);
@@ -38,15 +57,15 @@ export default class ListMenu extends Component {
     this.deleteList = this.deleteList.bind(this);
     this.handleTouchTap = this.handleTouchTap.bind(this);
 
-    this.state = {
-      open: false
-    };
+    this.state = { open: false };
   }
 
   static propTypes = {
+    componentId: PropTypes.number,
     id: PropTypes.number,
-    addTodo: PropTypes.func.isRequired,
-    deleteList: PropTypes.func.isRequired
+    webSocket: PropTypes.object,
+    groupId: PropTypes.number.isRequired,
+    requestEnque:  PropTypes.func.isRequired
   }
 
 
@@ -63,19 +82,14 @@ export default class ListMenu extends Component {
   }
 
   clickOk(data) {
-    const { id } = this.props
-    this.props.addTodo(Object.assign({}, data, { componentId: id}));
-
-    this.setState({
-      open: false,
-    });
+    const { id } = this.props;
+    this.props.requestEnque(RemoteService.todo_add( id, data.title, data.text), CommonFunc.callBack(this.props.webSocket));
+    this.setState({open: false});
   }
 
   deleteList(){
-    const { id } = this.props
-    this.props.deleteList(id);
+    this.props.requestEnque(RemoteService.list_delete(this.props.groupId, this.props.id), CommonFunc.callBack(this.props.webSocket));
   }
-
 
   render() {
     const { id } = this.props;
@@ -102,7 +116,7 @@ export default class ListMenu extends Component {
           <MenuItem primaryText="リストを削除" onTouchTap={this.deleteList}/>
         </IconMenu>
 
-        <TodoInputDialog open={open} handleRequestClose={this.handleRequestClose} clickOk={this.clickOk}/>
+        <TodoDialog menuName="TODO追加" open={open} handleRequestClose={this.handleRequestClose} clickOk={this.clickOk}/>
       </div>
     );
   }
