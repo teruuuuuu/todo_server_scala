@@ -129,7 +129,7 @@ class TodoService @Inject()() {
           ( (select nextval('todo_category_id_seq')),
             {groupId},
             {name},
-            (select coalesce(max(index) + 1, 1) from todo_category)
+            (select coalesce(max(index) + 1, 1) from todo_category where group_id = {groupId})
            )
         """
       ).on(

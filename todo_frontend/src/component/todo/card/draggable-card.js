@@ -44,8 +44,8 @@ const OPTIONS = {
     } else {
       isEqual = false;
     }
-    return isEqual;
-    //return false;
+    //return isEqual;
+    return false;
   }
 };
 

@@ -28,12 +28,13 @@ export function  list_delete(groupId, categoryId) {
   return createRequestData( requestUrl, 'JSON', 'DELETE',  data,  response_action );
 }
 
-export function  list_move(groupId, categoryId, index) {
+export function  list_move(groupId, categoryId, nextIndexId, index) {
   const response_action = function(data){
     return {type: types.END, data: data}
   }
   const data = {
     "categoryId": categoryId,
+    "nextIndexId": nextIndexId,
     "index": index,
   }
   const requestUrl = REQUEST_URL.LIST_MOVE.replace("{$1}", groupId).replace("{$2}", categoryId);
@@ -56,7 +57,6 @@ export function  todo_init(groupId) {
   return createRequestData( reuqestUrl, 'JSON', 'GET',  data,  response_action);
 }
 
-
 export function  todo_add(categoryId, title, text) {
   const response_action = function(data){
     return {type: types.END, data: data}
@@ -75,9 +75,9 @@ export function  todo_delete(categoryId, todoId) {
   const response_action = function(data){
     return {type: types.END, data: data}
   }
-
   const data = {
-    "todoId": todoId,
+    "categoryId": categoryId,
+    "todoId": todoId
   }
   const requestUrl = REQUEST_URL.TODO_DELTE.replace("{$1}", categoryId).replace("{$2}", todoId);
   return createRequestData( requestUrl, 'JSON', 'DELETE',  data,  response_action );

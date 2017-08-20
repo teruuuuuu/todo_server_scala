@@ -50,7 +50,7 @@ const listSource = {
 
 const listTarget = {
   canDrop() {
-    return false;
+    return true;
   },
   hover(props, monitor, component) {
     if (!props.isScrolling) {
@@ -71,11 +71,15 @@ const listTarget = {
     if (listId !== nextX) {
       //props.moveList(listId, props.x);
       props.moveList(monitor.getItem().x, props.x);
-      props.requestEnque(RemoteService.list_move(props.groupId, monitor.getItem().id, props.x + 1), CommonFunc.callBack(props.webSocket.webSocket));
+      props.requestEnque(RemoteService.list_move(props.groupId, monitor.getItem().id, props.id, props.x + 1), CommonFunc.callBack(props.webSocket.webSocket));
       //const nextX = props.x + Math.round( monitor.getClientOffset().x / 200 );
       //props.moveList( props.x, nextX);
     }
+  },
+  drop(props, monitor, component) {
+    //props.requestEnque(RemoteService.list_move(props.groupId, monitor.getItem().id, props.id, props.x + 1), CommonFunc.callBack(props.webSocket.webSocket));
   }
+
 };
 
 function mapStateToProps(state) {

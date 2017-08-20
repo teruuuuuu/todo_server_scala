@@ -174,16 +174,38 @@ class TodoContoroller  @Inject()(val messagesApi: MessagesApi,
             Ok(Json.toJson(CommonResut("fail","")))
           },
           validForm => {
+            val nextIndex = todoService.getAllTodoCategory(db, groupId).filter(_.id == validForm.nextIndexId) match {
+              case x if x.size >= 1 => x.head.index
+              case _ => 1
+            }
+            var nextUpdateIndex = 1
             todoService.getTodoCategory(db, validForm.categoryId).map{
               moveCategory =>
-                moveCategory.index < validForm.index match{
+                todoService.getAllTodoCategory(db, groupId).zipWithIndex.foreach {
+                  case (todoCategory, index) =>
+                    if (todoCategory.id == moveCategory.id) {
+                      //todoService.updateTodoCategory(db, todoCategory.copy(index = nextIndex))
+                    } else {
+                      if(todoCategory.index == nextIndex) {
+                        nextUpdateIndex = index + 1
+                      }
+                      if (moveCategory.index < todoCategory.index && todoCategory.index <= nextIndex) {
+                        todoService.updateTodoCategory(db, todoCategory.copy(index = index ))
+                      } else if(moveCategory.index > todoCategory.index && todoCategory.index >= nextIndex){
+                        todoService.updateTodoCategory(db, todoCategory.copy(index = index + 2))
+                      }
+                    }
+                }
+                todoService.updateTodoCategory(db, moveCategory.copy(index = nextUpdateIndex))
+                /*
+                moveCategory.index <= nextIndex match{
                   case true  => {
                     todoService.getAllTodoCategory(db, groupId).zipWithIndex.foreach{
                       case (todoCategory, index) =>
                       if(todoCategory.id == moveCategory.id){
-                        todoService.updateTodoCategory(db, todoCategory.copy(index = validForm.index))
-                      }else if(moveCategory.index < todoCategory.index && todoCategory.index <= validForm.index){
-                        todoService.updateTodoCategory(db, todoCategory.copy(index = index ))
+                        todoService.updateTodoCategory(db, todoCategory.copy(index = nextIndex))
+                      }else if(moveCategory.index < todoCategory.index && todoCategory.index <= nextIndex){
+                        todoService.updateTodoCategory(db, todoCategory.copy(index = todoCategory.index - 1))
                       }
                     }
                   }
@@ -191,13 +213,14 @@ class TodoContoroller  @Inject()(val messagesApi: MessagesApi,
                     todoService.getAllTodoCategory(db, groupId).zipWithIndex.foreach{
                       case (todoCategory, index) =>
                         if(todoCategory.id == moveCategory.id){
-                          todoService.updateTodoCategory(db, todoCategory.copy(index = validForm.index))
-                        }else if(moveCategory.index > todoCategory.index && todoCategory.index >= validForm.index){
-                          todoService.updateTodoCategory(db, todoCategory.copy(index = index + 2))
+                          todoService.updateTodoCategory(db, todoCategory.copy(index = nextIndex))
+                        }else if(moveCategory.index > todoCategory.index && todoCategory.index >= nextIndex){
+                          todoService.updateTodoCategory(db, todoCategory.copy(index = todoCategory.index + 1))
                         }
                     }
                   }
                 }
+                */
             }
             Ok(Json.toJson(CommonResut("success","")))
           }
