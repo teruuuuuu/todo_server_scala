@@ -1,6 +1,14 @@
 import React, { Component, findDOMNode, PropTypes } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+
+import * as CommonFunc from './func/common-func';
+
+import * as ListsActions from '../../actions/todo.action';
+import * as RemoteActions from '../../actions/remote';
+import * as RemoteService from '../../actions/request/remote_todo'
 
 const textStyle = {
   'background': 'rgba(0,0,0,.05)',
@@ -16,7 +24,18 @@ const itemStyle = {
   'margin': '5px'
 }
 
+function mapStateToProps(state) {
+  return {
+    webSocket: state.todoWebsocket.webSocket,
+    groupId: state.todoReducer.groupId
+  };
+}
 
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators( Object.assign({}, ListsActions, RemoteActions), dispatch);
+}
+
+@connect(mapStateToProps, mapDispatchToProps)
 export default class TodoListAdd extends Component {
   constructor(props, context) {
     super(props, context);
@@ -24,13 +43,13 @@ export default class TodoListAdd extends Component {
   }
 
   static propTypes = {
-    addList: PropTypes.func.isRequired
   }
 
   addList(){
     const listText = this.refs.listText.getValue();
-    this.props.addList(listText)
+    this.props.requestEnque(RemoteService.list_add(this.props.groupId, listText), CommonFunc.callBack(this.props.webSocket));
   }
+
 
   render() {
 

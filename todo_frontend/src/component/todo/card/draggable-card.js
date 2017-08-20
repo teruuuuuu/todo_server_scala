@@ -44,7 +44,8 @@ const OPTIONS = {
     } else {
       isEqual = false;
     }
-    return isEqual;
+    //return isEqual;
+    return false;
   }
 };
 
@@ -62,7 +63,6 @@ export default class CardComponent extends Component {
 
   constructor(props, context) {
     super(props, context);
-    this.deleteTodo = this.deleteTodo.bind(this);
   }
 
 
@@ -70,11 +70,11 @@ export default class CardComponent extends Component {
     item: PropTypes.object,
     connectDragSource: PropTypes.func.isRequired,
     connectDragPreview: PropTypes.func.isRequired,
+    todoEdit: PropTypes.func,
     isDragging: PropTypes.bool.isRequired,
     x: PropTypes.number.isRequired,
     y: PropTypes.number,
-    stopScrolling: PropTypes.func,
-    deleteTodo: PropTypes.func
+    stopScrolling: PropTypes.func
   }
 
   componentDidMount() {
@@ -83,16 +83,12 @@ export default class CardComponent extends Component {
     });
   }
 
-  deleteTodo(){
-    this.props.deleteTodo({x: this.props.x, y: this.props.y, id: this.props.item.id})
-  }
-
   render() {
-    const { isDragging, connectDragSource, item, deleteTodo, x, y } = this.props;
+    const { isDragging, connectDragSource, item, x, y } = this.props;
 
     return connectDragSource(
       <div>
-        <Card style={getStyles(isDragging)} item={item} deleteTodo={this.deleteTodo}/>
+        <Card style={getStyles(isDragging)} item={item} todoEdit={this.props.todoEdit} x={x} y={y}/>
       </div>
     );
   }

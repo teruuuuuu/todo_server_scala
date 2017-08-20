@@ -3,7 +3,7 @@
   "GROUP_TODO_INIT": "http://localhost:9000/groups/{$1}/todos",
   "TODO_ADD": "http://localhost:9000/categories/{$1}/todos",
   "TODO_DELTE": "http://localhost:9000/categories/{$1}/todos/{$2}",
-  "TODO_MOVE": "http://localhost:9000/categories/{$1}/todos/{$2}",
+  "TODO_UPDATE": "http://localhost:9000/categories/{$1}/todos/{$2}",
   "LIST_ADD": "http://localhost:9000/groups/{$1}/categories",
   "LIST_MOVE": "http://localhost:9000/groups/{$1}/categories/{$2}",
   "LIST_DELETE": "http://localhost:9000/groups/{$1}/categories/{$2}",

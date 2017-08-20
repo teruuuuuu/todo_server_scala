@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import { DropTarget, DragSource } from 'react-dnd';
-
-import TodoCardList from './card/todo-card-list';
 
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
@@ -10,6 +10,14 @@ import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 
+import * as CommonFunc from './func/common-func';
+
+import * as ListsActions from '../../actions/todo.action';
+import * as RemoteActions from '../../actions/remote';
+import * as RemoteService from '../../actions/request/remote_todo'
+
+import TodoCardList from './card/todo-card-list';
+import TodoDialog from './dialog/todo-input-dialog';
 import ListMenu from './menu/list-menu';
 
 
@@ -44,7 +52,7 @@ const listTarget = {
   canDrop() {
     return false;
   },
-  hover(props, monitor) {
+  hover(props, monitor, component) {
     if (!props.isScrolling) {
       if (window.innerWidth - monitor.getClientOffset().x < 200) {
         props.startScrolling('toRight');
@@ -61,11 +69,27 @@ const listTarget = {
     const { id: listId } = monitor.getItem();
     const { id: nextX } = props;
     if (listId !== nextX) {
-      props.moveList(listId, props.x, props.id);
+      //props.moveList(listId, props.x);
+      props.moveList(monitor.getItem().x, props.x);
+      props.requestEnque(RemoteService.list_move(props.groupId, monitor.getItem().id, props.id, props.x + 1), CommonFunc.callBack(props.webSocket.webSocket));
+      //const nextX = props.x + Math.round( monitor.getClientOffset().x / 200 );
+      //props.moveList( props.x, nextX);
     }
   }
 };
 
+function mapStateToProps(state) {
+  return {
+    webSocket: state.todoWebsocket,
+    groupId: state.todoReducer.groupId,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators( Object.assign({}, ListsActions, RemoteActions ), dispatch);
+}
+
+@connect(mapStateToProps, mapDispatchToProps)
 @DropTarget('list', listTarget, connectDragSource => ({
   connectDropTarget: connectDragSource.dropTarget(),
 }))
@@ -77,8 +101,7 @@ export default class TodoBoard extends Component {
 
   constructor(props, context) {
     super(props, context);
-    this.addTodo = this.addTodo.bind(this);
-    this.deleteTodo = this.deleteTodo.bind(this);
+    this.state = { open: false, selectItem: null };
   }
 
   static propTypes = {
@@ -93,21 +116,43 @@ export default class TodoBoard extends Component {
     startScrolling: PropTypes.func,
     stopScrolling: PropTypes.func,
     isScrolling: PropTypes.bool,
-    addTodo: PropTypes.func.isRequired,
-    deleteTodo: PropTypes.func.isRequired,
-    deleteList: PropTypes.func.isRequired,
+    groupId: PropTypes.number,
   }
 
-  addTodo(data){
-    this.props.addTodo(data);
+  todoEdit(context) {
+
+    function todoEditFunc(item, x, y){
+      //context.refs.todoDialog.props.title = item.title;
+      //context.refs.todoDialog.props.text = item.text;
+      //context.refs.todoDialog.showSet(item);
+      context.setState({open: true});
+      context.setState({selectItem: item});
+    }
+    return todoEditFunc;
   }
 
-  deleteTodo(data){
-    this.props.deleteTodo(data);
+  clickOk(context) {
+    function clickOkFunc(event) {
+      //event.props.moveCard();
+      const { selectItem } = context.state;
+      context.props.requestEnque(RemoteService.todo_update(selectItem.categoryId, selectItem.id, event.title, event.text), CommonFunc.callBack(context.props.webSocket.webSocket));
+      context.setState({open: false});
+    }
+    return clickOkFunc;
+  }
+
+  handleRequestClose(context) {
+    function handleRequestCloseFunc(){
+      context.setState({
+        open: false,
+      });
+    }
+    return handleRequestCloseFunc;
   }
 
   render() {
     const { connectDropTarget, connectDragSource, item, id, x, moveCard, isDragging } = this.props;
+    const { open, selectItem } = this.state;
     const opacity = isDragging ? 0.5 : 1;
 
     return connectDragSource(connectDropTarget(
@@ -115,7 +160,7 @@ export default class TodoBoard extends Component {
         <div className="desk-head">
           <div className="desk-name">{item.name}</div>
 
-          <ListMenu id={id} addTodo={this.addTodo} deleteList={this.props.deleteList}/>
+          <ListMenu id={id}  />
         </div>
         <TodoCardList
           moveCard={moveCard}
@@ -124,10 +169,10 @@ export default class TodoBoard extends Component {
           startScrolling={this.props.startScrolling}
           stopScrolling={this.props.stopScrolling}
           isScrolling={this.props.isScrolling}
-          deleteTodo={this.deleteTodo}
           componentId={id}
+          todoEdit={this.todoEdit(this)}
         />
-
+        <TodoDialog menuName="TODO編集" selectItem={selectItem} open={open} handleRequestClose={this.handleRequestClose(this)} clickOk={this.clickOk(this)} ref="todoDialog"/>
       </div>
     ));
   }
