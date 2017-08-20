@@ -173,15 +173,20 @@ class TodoContoroller  @Inject()(val messagesApi: MessagesApi,
             Ok(Json.toJson(CommonResut("fail","")))
           },
           validForm => {
+            val nextIndex = todoService.getAllTodoCategory(db, groupId).filter(_.id == validForm.nextIndexId) match {
+              case x if x.size >= 1 => x.head.index
+              case _ => 1
+            }
+
             todoService.getTodoCategory(db, validForm.categoryId).map{
               moveCategory =>
-                moveCategory.index < validForm.index match{
+                moveCategory.index < nextIndex match{
                   case true  => {
                     todoService.getAllTodoCategory(db, groupId).zipWithIndex.foreach{
                       case (todoCategory, index) =>
                       if(todoCategory.id == moveCategory.id){
-                        todoService.updateTodoCategory(db, todoCategory.copy(index = validForm.index))
-                      }else if(moveCategory.index < todoCategory.index && todoCategory.index <= validForm.index){
+                        todoService.updateTodoCategory(db, todoCategory.copy(index = nextIndex))
+                      }else if(moveCategory.index < todoCategory.index && todoCategory.index <= nextIndex){
                         todoService.updateTodoCategory(db, todoCategory.copy(index = index ))
                       }
                     }
@@ -190,8 +195,8 @@ class TodoContoroller  @Inject()(val messagesApi: MessagesApi,
                     todoService.getAllTodoCategory(db, groupId).zipWithIndex.foreach{
                       case (todoCategory, index) =>
                         if(todoCategory.id == moveCategory.id){
-                          todoService.updateTodoCategory(db, todoCategory.copy(index = validForm.index))
-                        }else if(moveCategory.index > todoCategory.index && todoCategory.index >= validForm.index){
+                          todoService.updateTodoCategory(db, todoCategory.copy(index = nextIndex))
+                        }else if(moveCategory.index > todoCategory.index && todoCategory.index >= nextIndex){
                           todoService.updateTodoCategory(db, todoCategory.copy(index = index + 2))
                         }
                     }

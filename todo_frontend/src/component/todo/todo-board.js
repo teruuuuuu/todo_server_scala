@@ -61,7 +61,7 @@ const listTarget = {
     const { id: listId } = monitor.getItem();
     const { id: nextX } = props;
     if (listId !== nextX) {
-      props.moveList(listId, props.x);
+      props.moveList(listId, props.x, props.id);
     }
   }
 };

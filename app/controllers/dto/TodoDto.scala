@@ -87,10 +87,11 @@ trait TodoDto {
     )(DeleteTodoList.apply)(DeleteTodoList.unapply)
   )
 
-  case class MoveTodoList(categoryId: Long, index: Int)
+  case class MoveTodoList(categoryId: Long, nextIndexId: Long, index: Int)
   implicit val moveTodoListForm:Form[MoveTodoList] = Form (
     mapping(
       "categoryId" -> longNumber,
+      "nextIndexId" -> longNumber,
       "index" -> number
     )(MoveTodoList.apply)(MoveTodoList.unapply)
   )

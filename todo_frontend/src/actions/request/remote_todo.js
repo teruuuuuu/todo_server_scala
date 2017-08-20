@@ -63,12 +63,13 @@ export function  list_add(groupId, listTitle) {
   return createRequestData( requestUrl, 'JSON', 'POST',  data,  response_action );
 }
 
-export function  list_move(groupId, categoryId, index) {
+export function  list_move(groupId, categoryId, nextIndexId, index) {
   const response_action = function(data){
     return {type: types.END, data: data}
   }
   const data = {
     "categoryId": categoryId,
+    "nextIndexId": nextIndexId,
     "index": index,
   }
   const requestUrl = REQUEST_URL.LIST_MOVE.replace("{$1}", groupId).replace("{$2}", categoryId);
