@@ -8,3 +8,7 @@ run
 # intelij IDEA
 依存性の解決
 option + Enter
+
+
+デプロイ
+sbt clean compile stage

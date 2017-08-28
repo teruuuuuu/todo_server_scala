@@ -69,8 +69,18 @@ const listTarget = {
     const { id: listId } = monitor.getItem();
     const { id: nextX } = props;
     if (listId !== nextX) {
+      var currentIndex = 1;
+      var nextIndex = 1;
+      var lists = props.todoReducer.lists;
+      for(var i = 0; i < lists.length; i++){
+        if(lists[i].id == monitor.getItem().id){
+          currentIndex = i + 1;
+        } else if(lists[i].id == props.id){
+          nextIndex = i + 1;
+        }
+      }
       //props.moveList(listId, props.x);
-      props.moveList(monitor.getItem().x, props.x);
+      props.moveList(currentIndex, nextIndex);
       props.requestEnque(RemoteService.list_move(props.groupId, monitor.getItem().id, props.id, props.x + 1), CommonFunc.callBack(props.webSocket.webSocket));
       //const nextX = props.x + Math.round( monitor.getClientOffset().x / 200 );
       //props.moveList( props.x, nextX);
@@ -86,6 +96,7 @@ function mapStateToProps(state) {
   return {
     webSocket: state.todoWebsocket,
     groupId: state.todoReducer.groupId,
+    todoReducer: state.todoReducer
   };
 }
 
@@ -120,6 +131,7 @@ export default class TodoBoard extends Component {
     startScrolling: PropTypes.func,
     stopScrolling: PropTypes.func,
     isScrolling: PropTypes.bool,
+    todoReducer: PropTypes.object.isRequired,
     groupId: PropTypes.number,
   }
 
