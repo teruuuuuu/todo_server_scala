@@ -104,10 +104,11 @@ export default class TodoComponent extends Component {
     this.props.requestEnque(RemoteService.todo_update(categoryId, todoId, title, text), CommonFunc.callBack(this.props.webSocket.webSocket));
   }
 
-  moveList(listId, nextX) {
+  moveList(listId, nextX, nextIndexId) {
     const { lastX } = this.findList(listId);
     this.props.moveList(lastX, nextX);
-    this.props.requestEnque(RemoteService.list_move(this.props.groupId, listId, nextX + 1), CommonFunc.callBack(this.props.webSocket.webSocket));
+    //this.props.callApi(RemoteService.list_move(listId, nextX + 1));
+    this.props.requestEnque(RemoteService.list_move(this.props.groupId, listId, nextIndexId, nextX + 1), this.callBack(this.state.webSocket));
   }
 
   findList(id) {

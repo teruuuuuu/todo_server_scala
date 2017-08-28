@@ -174,31 +174,50 @@ class TodoContoroller  @Inject()(val messagesApi: MessagesApi,
             Ok(Json.toJson(CommonResut("fail","")))
           },
           validForm => {
-            todoService.getTodoCategory(db, validForm.categoryId).map{
-              moveCategory =>
-                moveCategory.index < validForm.index match{
-                  case true  => {
-                    todoService.getAllTodoCategory(db, groupId).zipWithIndex.foreach{
-                      case (todoCategory, index) =>
-                      if(todoCategory.id == moveCategory.id){
-                        todoService.updateTodoCategory(db, todoCategory.copy(index = validForm.index))
-                      }else if(moveCategory.index < todoCategory.index && todoCategory.index <= validForm.index){
-                        todoService.updateTodoCategory(db, todoCategory.copy(index = index ))
-                      }
-                    }
-                  }
-                  case false => {
-                    todoService.getAllTodoCategory(db, groupId).zipWithIndex.foreach{
-                      case (todoCategory, index) =>
-                        if(todoCategory.id == moveCategory.id){
-                          todoService.updateTodoCategory(db, todoCategory.copy(index = validForm.index))
-                        }else if(moveCategory.index > todoCategory.index && todoCategory.index >= validForm.index){
-                          todoService.updateTodoCategory(db, todoCategory.copy(index = index + 2))
-                        }
-                    }
-                  }
-                }
+            val currentIndex = todoService.getAllTodoCategory(db, groupId).filter(_.id == validForm.categoryId) match {
+              case x if x.size >= 1 => x.head.index
+              case _ => 1
             }
+            val nextIndex = todoService.getAllTodoCategory(db, groupId).filter(_.id == validForm.nextIndexId) match {
+              case x if x.size >= 1 => x.head.index
+              case _ => 1
+            }
+            var nextUpdateIndex = 1
+            val allTodoCategory = todoService.getAllTodoCategory(db, groupId)
+            val moveTodoList = todoService.getTodoCategory(db, validForm.categoryId).head
+            currentIndex > nextIndex match {
+              case true =>
+                // 左にドラッグ&ドロップ
+                allTodoCategory.zipWithIndex.foreach {
+                  case (todoCategory, index) =>
+                    if(todoCategory.id == validForm.categoryId){
+                    } else if(todoCategory.index <= currentIndex && todoCategory.index >= nextIndex) {
+                      if(todoCategory.id == validForm.nextIndexId) {
+                        nextUpdateIndex = index + 1
+                      }
+                      todoService.updateTodoCategory(db, todoCategory.copy(index = index + 2))
+                    } else {
+                      todoService.updateTodoCategory(db, todoCategory.copy(index = index + 1))
+                    }
+                }
+                todoService.updateTodoCategory(db, moveTodoList.copy(index = nextUpdateIndex))
+              case false =>
+                // 右にドラッグ&ドロップ
+                allTodoCategory.zipWithIndex.foreach {
+                  case (todoCategory, index) =>
+                    if(todoCategory.id == validForm.categoryId){
+                    } else if(todoCategory.index >= currentIndex && todoCategory.index <= nextIndex) {
+                      if(todoCategory.id == validForm.nextIndexId) {
+                        nextUpdateIndex = index + 1
+                      }
+                      todoService.updateTodoCategory(db, todoCategory.copy(index = index))
+                    } else {
+                      todoService.updateTodoCategory(db, todoCategory.copy(index = index + 1))
+                    }
+                }
+                todoService.updateTodoCategory(db, moveTodoList.copy(index = nextUpdateIndex))
+            }
+
             Ok(Json.toJson(CommonResut("success","")))
           }
         )
